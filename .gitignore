@@ -17,4 +17,4 @@ lib/jcurses.jar
 lib/libjcurses.so
 lib/libjcurses.dll
 lib/libjcurses.jnilib
-
+.idea
