@@ -2,7 +2,6 @@
 .project
 config.log
 config.status
-Makefile
 config.cache
 .zipCreation
 target
@@ -18,3 +17,5 @@ lib/libjcurses.so
 lib/libjcurses.dll
 lib/libjcurses.jnilib
 .idea
+doc
+**/Toolkit.class
