@@ -19,3 +19,4 @@ lib/libjcurses.jnilib
 .idea
 doc
 **/Toolkit.class
+jcurses_system_Toolkit.h
