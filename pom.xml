@@ -1,25 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>kba.jcurses</groupId>
+
+    <groupId>daluai.jcurses</groupId>
     <artifactId>jcurses</artifactId>
-    <version>0.9.6</version>
-    <name>jcurses</name>
-    <description>The Java Curses Library (JCurses) is library for developing text terminal based applications using Java programming language. It is implemented as a Windowing toolkit similar to AWT, but built upon the UNIX "curses" windowing system.</description>
-    <inceptionYear>2001</inceptionYear>
-    <organization>
-        <name>JCurses Development Team</name>
-        <url>http://sourceforge.net/projects/javacurses</url>
-    </organization>
+    <version>0.1.0-SNAPSHOT</version>
+
+    <description>A fork of the kba Java Curses Library (JCurses). It is library for developing text terminal based applications using Java programming language. It is implemented as a Windowing toolkit similar to AWT, but built upon the UNIX "curses" windowing system.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <scm>
-        <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/javacurses:${project.name}</connection>
-        <url>http://sourceforge.net/projects/javacurses</url>
-    </scm>
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <doclint>none</doclint>
+                    <failOnError>false</failOnError>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
         <sourceDirectory>src</sourceDirectory>
     </build>
+
 </project>
