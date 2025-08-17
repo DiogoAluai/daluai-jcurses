@@ -84,7 +84,7 @@ JNIEXPORT void JNICALL Java_jcurses_system_Toolkit_init (JNIEnv * env, jclass cl
 	cbreak ();
 	noecho ();
 	start_color();
-	/*curs_set(0);*/
+	curs_set(0);
 }
 
 void clear_box(int x, int y, int width, int height, jshort number, jlong attr) {
@@ -116,6 +116,7 @@ JNIEXPORT void JNICALL Java_jcurses_system_Toolkit_drawRectangle (JNIEnv * env ,
 
 JNIEXPORT void JNICALL Java_jcurses_system_Toolkit_shutdown (JNIEnv * env, jclass class) {
 	endwin();
+	curs_set(1);
 }
 
 void drawLineWithChars(jint start, jint end, jint end2, jshort number, jlong attribute, short alignment, chtype ch) {
