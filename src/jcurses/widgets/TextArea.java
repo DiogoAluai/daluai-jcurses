@@ -77,11 +77,17 @@ public class TextArea extends TextComponent implements IScrollable
     setColors(Theme.COLOR_WIDGET_SCROLLBAR, aColors);
   }
 
+  /**
+   * Get scrollbar colors
+   */
   public CharColor getScrollbarColors()
   {
     return getColors(Theme.COLOR_WIDGET_SCROLLBAR);
   }
 
+  /**
+   * Set scrollbar colors
+   */
   public CharColor getScrollbarDefaultColors()
   {
     return getDefaultColors(Theme.COLOR_WIDGET_SCROLLBAR); 

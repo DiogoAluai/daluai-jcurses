@@ -11,8 +11,14 @@ import jcurses.system.Toolkit;
 public class ScrollbarUtils
 {
 
-  public static final int        HORIZONTAL = 0;
-  public static final int        VERTICAL   = 1;
+  /**
+   * Horizontal
+   */
+  public static final int HORIZONTAL = 0;
+  /**
+   * Vertical
+   */
+  public static final int VERTICAL = 1;
 
   private static final CharColor __color    = new CharColor(CharColor.BLACK, CharColor.WHITE, CharColor.REVERSE);
 
@@ -22,8 +28,8 @@ public class ScrollbarUtils
    * @param start the start coordinate of the scrollbar (x or y depending on <code>alignment</code>
    * @param end the end coordinate of the scrollbar (x or y depending on <code>alignment</code>
    * @param cst the width (height) of the scrollbars line
-   * @param firstPart the part of the scrollbar before the beam ( 0=> <1)
-   * @param lastPart the part of the scrollbar after the beam ( 0=> <1)
+   * @param firstPart the part of the scrollbar before the beam ( (<code>0 &lt;= firstPart &lt; 1</code>)
+   * @param lastPart the part of the scrollbar after the beam ( (<code>0 &lt;= lastPart &lt; 1</code>)
    * @param alignment scrollbar alignment <code>HORIZONTAL</code> or <code>VERTICAL</code>
    */
   public static void drawScrollBar(int start, int end, int cst, float firstPart, float lastPart, int alignment)

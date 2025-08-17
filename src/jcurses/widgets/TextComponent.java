@@ -82,16 +82,25 @@ public class TextComponent extends Widget
     this(- 1, - 1, text);
   }
 
+  /**
+   * Set cursor colors
+   */
   public void setCursorColors(CharColor aColor)
   {
     setColors(aColor);
   }
 
+  /**
+   * Get cursor colors
+   */
   public CharColor getCursorColors()
   {
     return getColors();
   }
 
+  /**
+   * Get cursor default colors
+   */
   public CharColor getCursorDefaultColors()
   {
     return getDefaultColors();
@@ -185,11 +194,17 @@ public class TextComponent extends Widget
     return _text.toString();
   }
 
+  /**
+   * Add listener
+   */
   public void addListener(ValueChangedListener listener)
   {
     _listenerManager.addListener(listener);
   }
 
+  /**
+   * Remove listener
+   */
   public void removeListener(ValueChangedListener listener)
   {
     _listenerManager.removeListener(listener);
@@ -220,6 +235,9 @@ public class TextComponent extends Widget
     return new Rectangle(_preferredWidth, _preferredHeight);
   }
 
+  /**
+   * Get text height
+   */
   protected int getTextHeight()
   {
     return _lines.size();

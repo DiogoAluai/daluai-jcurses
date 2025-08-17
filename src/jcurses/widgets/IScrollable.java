@@ -52,26 +52,26 @@ public interface IScrollable
   CharColor getScrollbarColors();
 
   /**
-   * The method returns the offset of the horizontal scrollbar as part of the length of the side of the border rectangle ( 0 <=value < 1.0 )
+   * The method returns the offset of the horizontal scrollbar as part of the length of the side of the border rectangle ( <code>0 &lt;= value &lt; 1.0</code> )
    * 
    * @return horizontal scrollbar offset
    */
   float getHorizontalScrollbarOffset();
 
   /**
-   * The method returns the length of the horizontal scrollbar as part of the length of the side of the border rectangle ( 0 < value <= 1.0 )
+   * The method returns the length of the horizontal scrollbar as part of the length of the side of the border rectangle ((<code>0 &lt; value &lt;= 1.0</code>))
    * 
    * @return vertical scrollbar o
    */
   float getHorizontalScrollbarLength();
 
   /**
-   * The method returns the offset of the vertical scrollbar as part of the length of the side of the border rectangle ( 0 < =value < 1.0 )
+   * The method returns the offset of the vertical scrollbar as part of the length of the side of the border rectangle ( <code>0 &lt;= value &lt; 1.0</code> )
    */
   float getVerticalScrollbarOffset();
 
   /**
-   * The method returns the length of the vertical scrollbar as part of the length of the side of the border rectangle ( 0 <value <= 1.0 )
+   * The method returns the length of the vertical scrollbar as part of the length of the side of the border rectangle ( <code>0 &lt; value &lt;= 1.0</code> )
    */
   float getVerticalScrollbarLength();
 

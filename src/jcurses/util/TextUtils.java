@@ -20,7 +20,7 @@ public class TextUtils {
 	 *
 	 * @param  aMsg  Original text
 	 * @param  aLen  wrap length
-	 * @return       Array of String representing lines each <= length
+	 * @return       Array of String representing lines <code>each &lt;= length</code>
 	 */
 	public static String[] wrapLines(String aMsg, int aLen) {
 		List mLines = new LinkedList();

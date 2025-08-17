@@ -18,7 +18,7 @@ java:
 	$(JAVAC) -encoding ISO-8859-1 -classpath $(CLASSPATH) -d ./classes `find ./src/jcurses -name *.java`
 
 docs:
-	$(JAVADOC) -encoding ISO-8859-1 -classpath $(CLASSPATH) -sourcepath ./src -d ./doc jcurses.event jcurses.system jcurses.util jcurses.widgets
+	$(JAVADOC) -Xdoclint:none -encoding ISO-8859-1 -classpath $(CLASSPATH) -sourcepath ./src -d ./doc jcurses.event jcurses.system jcurses.util jcurses.widgets
 
 include: java
 	$(JAVAHOME)/bin/javac -d ./src/native/include -cp classes src/jcurses/system/Toolkit.java -Xlint:unchecked
