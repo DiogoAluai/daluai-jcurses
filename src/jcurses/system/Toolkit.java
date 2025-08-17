@@ -110,7 +110,9 @@ public class Toolkit {
       }
     }
   }
-	
+
+  public static native void refresh();
+
   private static native void fillAttributes(long [] attributes);
 	
   private static native void fillBasicColors(short [] basicColors);

@@ -74,6 +74,9 @@ HANDLE outputHandle;
 WORD lastMode;
 
 
+JNIEXPORT void JNICALL Java_jcurses_refresh(JNIEnv *env, jclass class) {
+    refresh();
+}
 
 JNIEXPORT jint JNICALL Java_jcurses_system_Toolkit_getScreenWidth (JNIEnv * env, jclass class) {
 	return COLS;

@@ -1,4 +1,5 @@
 EXPORTS
+	Java_jcurses_system_Toolkit_refresh
 	Java_jcurses_system_Toolkit_getScreenWidth
 	Java_jcurses_system_Toolkit_getScreenHeight
 	Java_jcurses_system_Toolkit_hasColorsAsInteger

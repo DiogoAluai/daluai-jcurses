@@ -25,6 +25,14 @@ extern "C" {
 #define jcurses_system_Toolkit_HORIZONTAL 1L
 /*
  * Class:     jcurses_system_Toolkit
+ * Method:    refresh
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_jcurses_system_Toolkit_refresh
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     jcurses_system_Toolkit
  * Method:    fillAttributes
  * Signature: ([J)V
  */
