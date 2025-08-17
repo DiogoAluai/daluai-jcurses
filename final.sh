@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 ##
-## Final dot sh
-## Compile java classes, and build lib/libjcurses.so
+## Compile java classes, build lib/libjcurses.so, and install to local maven repository
 ##
 
 # sdkman nuances
@@ -14,6 +13,8 @@ type sdk >/dev/null || {
   echo "[ERROR] Could not execut sdkman"
   exit 1
 }
+
+mvn clean install  || exit 1
 
 java_8_sdkman_id="8.0.462-amzn"
 
