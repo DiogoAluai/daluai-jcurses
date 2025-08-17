@@ -1,5 +1,20 @@
-JCurses -- a java console windowing toolkit for Windows and Linux
+JCurses - a java console windowing toolkit for Windows and Linux
 =================================================================
+
+---
+
+Aug 2025 - Installation
+--------
+The Makefile relies on `javah`, which one can get with ubuntu with:
+```bash
+sudo apt install openjdk-8-jdk-headless
+```
+Adaption of java command paths in Makefile is required.
+A `final.sh` file is provided to fully build the project, requiring [sdkman](https://sdkman.io/) to temporarily set java 8
+for building purposes.
+
+
+---
 
 Preamble
 --------
