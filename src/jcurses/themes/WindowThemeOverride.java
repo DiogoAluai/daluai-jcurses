@@ -37,7 +37,8 @@ public class WindowThemeOverride extends BaseTheme
       mColor = baseTheme.getColor(aKey);
 
     if ( mColor == null )
-      mColor = Window.getTheme().getColor(aKey);
+      return null;
+//      mColor = Window.getTheme().getColor(aKey);
 
     return mColor;
   }

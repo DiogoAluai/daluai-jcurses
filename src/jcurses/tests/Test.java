@@ -68,7 +68,7 @@ public class Test extends Window implements ItemListener, ActionListener, ValueC
 
     _list.addListener(this);
 
-    _list.getSelectedColors().setColorAttribute(CharColor.BOLD);
+    _list.getColors().setColorAttribute(CharColor.BOLD);
 
     GridLayoutManager manager1 = new GridLayoutManager(1, 1);
 

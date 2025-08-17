@@ -1,81 +1,88 @@
-
 package jcurses.widgets;
 
 import jcurses.system.CharColor;
+import jcurses.system.InputChar;
 import jcurses.system.Toolkit;
+
+import jcurses.util.Protocol;
 import jcurses.util.Rectangle;
-import jcurses.util.TextUtils;
+
+import java.util.StringTokenizer;
 
 /**
- * This class implements a label widget
- */
+*  This class implements a label widget
+*/
 public class Label extends Widget {
-	private String _label = null;
+	
+ 
+    private String _label;
+	
+	
+	private static CharColor __labelDefaultColors = new CharColor(CharColor.WHITE, CharColor.BLACK);
+	
+	public CharColor getDefaultColors() {
+		return __labelDefaultColors;
+	}
 
-	/**
-	 * The constructor
-	 *
-	 *
-	 * @param  aLabel   label's text param colors label's colors
-	 * @param  aColors  Description of the Parameter
-	 */
-	public Label(String aLabel, CharColor aColors) {
-		this(aLabel);
-		setColors(aColors);
+	public void setText(String _label) {
+		this._label = _label;
 	}
 
 	/**
-	 *  Gets the text of the Label
-	 *
-	 * @return    The text value
-	 */
-	public String getText() {
-		return _label;
-	}
-
-	/**
-	 *  Sets the text  of the Label
-	 *
-	 * @param  aText  The new text value
-	 */
-	public void setText(String aText) {
-		_label = aText;
-		if (_label == null) {
+    *  The constructor
+    * 
+    * @param label label's text
+    * param colors label's colors
+    */
+	public Label(String label, CharColor colors) {
+		if (label!=null) {
+			_label = label;
+		} else {
 			_label = "";
 		}
+		setColors(colors);
 	}
-
-	/**
-	 * The constructor which makes a Label of a String
-	 *
-	 *
-	 * @param  aLabel  label's text
-	 */
-	public Label(String aLabel) {
-		setText(aLabel);
+	
+	
+    /**
+    *  The constructor
+    * 
+    * @param label label's text
+    */
+	public Label(String label) {
+		this(label, null);
 	}
-
-	/**
-	 *  Calculates the preferred size of the Label.
-	 *
-	 * @return    The preferred size
-	 */
+	
+	
 	protected Rectangle getPreferredSize() {
-		String[] mLines = TextUtils.wrapLines(_label, Integer.MAX_VALUE);
-
-		int mWide = 0;
-        for (String mLine : mLines) {
-            mWide = Math.max(mWide, mLine.length());
-        }
-
-		return new Rectangle(mWide, mLines.length);
+		if (_label.indexOf("\n") == -1) {
+			return new Rectangle(_label.length(),1);
+		} else {
+			StringTokenizer tokenizer = new StringTokenizer(_label,"\n");
+			int width=0;
+			int height=0;
+			while (tokenizer.hasMoreElements()) {
+				String token = tokenizer.nextToken();
+				height++;
+				if (token.length()>width) {
+					width = token.length();
+				}
+			}
+			height = (height == 0)?1:height;
+			return new Rectangle(width, height);
+		}
 	}
-
-	/**
-	 *  The interface method that draws the label in its rectangle in its colors.
-	 */
+	
+	
 	protected void doPaint() {
-		Toolkit.printString(_label, getRectangle(), getColors());
+		Rectangle rect = (Rectangle)getSize().clone();
+		rect.setLocation(getAbsoluteX(), getAbsoluteY());
+		Toolkit.printString(_label,rect, getColors());
 	}
+	
+	
+	protected void doRepaint() {
+		doPaint();
+	}
+	
 }
-

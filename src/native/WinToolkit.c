@@ -2,6 +2,7 @@
 #include <conio.h>
 #include <stdio.h>
 #include <windows.h>
+#include <jni.h>
 
 typedef struct  {
 	jshort background;
@@ -606,8 +607,11 @@ JNIEXPORT void JNICALL Java_jcurses_system_Toolkit_printString (JNIEnv * env, jc
 
 	int length = (*env)->GetArrayLength(env,bytes);
 	unsigned char * charArray = (*env)->GetByteArrayElements(env, bytes, NULL);
+	
 	printString(charArray, length, x, y, width ,height, number, attr);
-
+	
+	// RELEASE ALLOCATED JNI MEMORY - Fix for Bug ID #3042758
+	(*env)->ReleaseByteArrayElements(env, bytes, charArray, JNI_ABORT);
 
 }
 

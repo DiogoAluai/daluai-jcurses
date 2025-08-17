@@ -1,5 +1,5 @@
-
 package jcurses.widgets;
+
 
 import jcurses.event.WindowEvent;
 import jcurses.event.WindowListener;
@@ -7,913 +7,795 @@ import jcurses.event.WindowListenerManager;
 import jcurses.system.CharColor;
 import jcurses.system.InputChar;
 import jcurses.system.Toolkit;
-import jcurses.themes.Theme;
-import jcurses.themes.WindowThemeOverride;
+import jcurses.util.Protocol;
 import jcurses.util.Rectangle;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Vector;
 
 /**
- * Under jCurses, unlike some GUI libraries, a Window is not a widget, but contains a panel (the root panel), that contains all widgets. A window can, but
- * doesn't must, have a border and a title. All windows under jcurses are managed in a stack, the topmost visible window on the stack gets all input
- * chars for handling, this is so-called focus window. If a window is created, it goes automatically to the top of the stack and lives there until another
- * window is created or explicitly brought to the top.
- */
+* \00This class is a jcurses implementation of an text based window. An window 
+*  under jcurses is, differnt from other GUI libraries, not a widget, this 
+*  contains a panel ( a the called root panel ), that contains all widgets.
+*  A window can, but doesn't must, have a border and a title.
+*  All windows under jcurses are managed in a stack, the topmost visible window
+*  window on the stack gets all input chars for handling, this is so called focus
+*  window. If an window are created, it gets automatically to the top of the stack
+*  and leaves the until an other window is created or explicitly brought to the top.
+*  
+*/
+
 public class Window {
 
-	/**
-	 *  Self-documenting
-	 */
-	public final static int DIR_LEFT = 0;
-	/**
-	 *  Self-documenting
-	 */
-	public final static int DIR_RIGHT = 1;
-	/**
-	 *  Self-documenting
-	 */
-	public final static int DIR_UP = 2;
-	/**
-	 *  Self-documenting
-	 */
-	public final static int DIR_DOWN = 3;
-
-	private static final InputChar __defaultClosingChar = new InputChar(InputChar.KEY_ESC);
-	private static final InputChar __defaultFocusChangeChar = new InputChar(InputChar.KEY_TAB);
-	private static final InputChar __upChar = new InputChar(InputChar.KEY_UP);
-	private static final InputChar __downChar = new InputChar(InputChar.KEY_DOWN);
-	private static final InputChar __leftChar = new InputChar(InputChar.KEY_LEFT);
-	private static final InputChar __rightChar = new InputChar(InputChar.KEY_RIGHT);
-
-	private final Hashtable _shortCutsTable = new Hashtable();
-	private final Vector _shortCutsList = new Vector();
-	private final Theme _theme = new WindowThemeOverride();
-	private final WindowListenerManager _listenerManager = new WindowListenerManager();
-
-	private InputChar _closingChar = getDefaultClosingChar();
-	private InputChar _focusChangeChar = getDefaultFocusChangeChar();
-
-	private boolean _closed = false;
-
-	private Panel _root;
-	private final Rectangle _rect;
-	private String _title;
-	private Vector _focusableChildren = null;
-
-	private boolean _border = false;
-	private boolean _hasShadow = true;
-	private boolean _visible = false;
+	private Panel _root = null;
+	
+	private Vector _focusableChilds = null;
 	private int _currentIndex = -1;
+	
+	private boolean _visible = false;
+	
+	private Rectangle _rect = null;
+	
+	private boolean _border = false;
+	private String _title = null;
+	
+	private boolean _hasShadow = true;
+	
+	private Vector _shortCutsList = new Vector();
+	private Hashtable _shortCutsTable = new Hashtable();
+	
+	boolean _closed = false;
+	
 
-	/**
-	 * The constructor
-	 *
-	 * @param  x       the top left corner's x coordinate
-	 * @param  y       the top left corner's y coordinate
-	 * @param  width   window's width
-	 * @param  height  window's height
-	 * @param  border  true, if the window has a border, false in other case
-	 * @param  title   DOCUMENT ME!
-	 */
-	public Window(int x, int y, int width, int height, boolean border, String title) {
+	
+   /**
+   *  The constructor
+   * 
+   * @param x the the top left corner's x coordinate
+   * @param y the top left corner's y coordinate
+   * @param width window's width
+   * @param height window's height
+   * @param border true, if the window has a border, false in other case
+   */
+	public Window (int x, int y, int width, int height, boolean border, String title) {
 		_border = border;
 		_title = title;
 		_rect = new Rectangle(width, height);
 		_rect.setLocation(x, y);
-
-		int x1 = border ? (x + 1) : x;
-		int y1 = border ? (y + 1) : y;
-		int w = border ? (width - 2) : width;
-		int h = border ? (height - 2) : height;
-
+		
+		int x1 = border?x+1:x;
+		int y1 = border?y+1:y;
+		int w = border?width-2:width;
+		int h = border?height-2:height;
+		
 		_root = new Panel(w, h);
-		_root.setLocation(x1, y1);
+		_root.setSize(new Rectangle(w, h));
+		_root.setX(x1);
+		_root.setY(y1);
 		_root.setWindow(this);
-
 		WindowManager.createWindow(this);
 	}
-
-	/**
-	 *  Gets the theme attribute of the Window class
-	 *
-	 * @return    The theme value
-	 */
-	public static Theme getTheme() {
-		return WindowManager.getTheme();
+	
+	
+   /**
+   *  The constructor. A window created with this constructor is centered on the screen.
+   *
+   * @param width window's width
+   * @param height window's height
+   * @param border true, if the window has a border, false in other case
+   */
+	public Window (int width, int height, boolean border, String title) {
+		this((Toolkit.getScreenWidth()-width)/2,(Toolkit.getScreenHeight()-height)/2, width, height, border, title); 
 	}
-
-	/**
-	 *  Sets the theme attribute of the Window class
-	 *
-	 * @param  aTheme  The new theme value
-	 */
-	public static void setTheme(Theme aTheme) {
-		WindowManager.setTheme(aTheme);
-	}
-
-	/**
-	 * The constructor. A window created with this constructor is centered on the screen.
-	 *
-	 * @param  width   window's width
-	 * @param  height  window's height
-	 * @param  border  true, if the window has a border, false in other case
-	 * @param  title   title which appears in the title position on the window
-	 */
-	public Window(int width, int height, boolean border, String title) {
-		this((Toolkit.getScreenWidth() - width) / 2, (Toolkit.getScreenHeight() - height) / 2, width, height, border, title);
-	}
-
-	/**
-	 *  Sets the borderColors attribute of the Window object
-	 *
-	 * @param  aColors  The new borderColors value
-	 */
-	public void setBorderColors(CharColor aColors) {
-		_theme.setColor(Theme.COLOR_WINDOW_BORDER, aColors);
-		repaint();
-	}
-
-	/**
-	 *  Gets the borderColors attribute of the Window object
-	 *
-	 * @return    The borderColors value
-	 */
-	public CharColor getBorderColors() {
-		return _theme.getColor(Theme.COLOR_WINDOW_BORDER);
-	}
-
-	/**
-	 * Has the window been closed?
-	 *
-	 * @return    true if the window is already closed, false otherwise.
-	 */
-	public boolean isClosed() {
-		return _closed;
-	}
-
-	/**
-	 * The method defines a new window's closing character. Default is escape.
-	 *
-	 * {@code null} means no closing character
-	 *
-	 * @param  character  new window's closing character - {@code null} means no closing character
-	 */
-	public void setClosingChar(InputChar character) {
-		_closingChar = character;
-	}
-
-	/**
-	 * The method returns the character which, when encountered in the default input handler
-	 * causes JCurses to close this window.
-	 *
-	 * @return    window's closing character - {@code null} means no closing character
-	 */
-	public InputChar getClosingChar() {
-		return _closingChar;
-	}
-
-	/**
-	 *  Gets the defaultBorderColors attribute of the Window object
-	 *
-	 * @return    The defaultBorderColors value
-	 */
-	public CharColor getDefaultBorderColors() {
-		return getTheme().getColor(Theme.COLOR_WINDOW_BORDER);
-	}
-
-	/**
-	 *  Gets the defaultTitleColors attribute of the Window object
-	 *
-	 * @return    The defaultTitleColors value
-	 */
-	public CharColor getDefaultTitleColors() {
-		return getTheme().getColor(Theme.COLOR_WINDOW_TITLE);
-	}
-
-	/**
-	 * The method defined the character used to navigate (change the focus) between widgets within the window. Default is 'tab'
-	 *
-	 * @param  character  new window's focus changing character
-	 */
-	public void setFocusChangeChar(InputChar character) {
-		_focusChangeChar = character;
-	}
-
-	/**
-	 * The method returns the character used to navigate (change the focus) between widgets within the window. Default is 'tab'
-	 *
-	 * @return    window's focus changing character
-	 */
-	public InputChar getFocusChangeChar() {
-		return _focusChangeChar;
-	}
-
-	/**
-	 * Sets the root panel of the window. This is the top most widget container in the window's widget hierarchy. It occupies the entire window out of the border
-	 * (if exists ).
-	 *
-	 * @param  root  a Panel suitable to be a root panel.
-	 */
-	public void setRootPanel(Panel root) {
-		_root = root;
-		_root.setWindow(this);
-		repaint();
-	}
-
-	/**
-	 *  Window manager closes all windows.
-	 */
-	public static void closeAllWindows() {
-		WindowManager.closeAll();
-	}
-
-	/**
-	 * Returns the  root panel of the window. This is the top most widget container in the window's widget hierarchy. It occupies the entire window out of the border
-	 * (if exists ).
-	 *
-	 * @return    the root panel of the window
-	 */
-	public Panel getRootPanel() {
-		return _root;
-	}
-
-	/**
-	 * The method defines whether the window is to paint with a shadow.
-	 *
-	 * @param  value  true if a shadow is to paint, false otherwise
-	 */
-	public void setShadow(boolean value) {
-		_hasShadow = value;
-		repaint();
-	}
-
-	/**
-	 *  Indicates whether the window is to paint with a shadow.
-	 *
-	 * @return    true if a shadow is to paint, false otherwise
-	 */
-	public boolean hasShadow() {
-		return _hasShadow;
-	}
-
-	/**
-	 *  Sets the titleColors attribute of the Window object
-	 *
-	 * @param  aColors  The new titleColors value
-	 */
-	public void setTitleColors(CharColor aColors) {
-		_theme.setColor(Theme.COLOR_WINDOW_TITLE, aColors);
-		repaint();
-	}
-
-	/**
-	 *  Gets the titleColors attribute of the Window object
-	 *
-	 * @return    The titleColors value
-	 */
-	public CharColor getTitleColors() {
-		return _theme.getColor(Theme.COLOR_WINDOW_TITLE);
-	}
-
-	/**
-	 * The method changes the window's visibility status
-	 *
-	 * @param  aVisible  true, if the window becomes visible, false in other case
-	 */
-	public void setVisible(boolean aVisible) {
-		if (aVisible != isVisible()) {
-			if (aVisible) {
-				show();
-			} else {
-				hide();
-			}
-		}
-	}
-
-	/**
-	 * The method returns the window's visibility status
-	 *
-	 * @return    true, if the window becomes visible, false in other case
-	 */
-	public boolean isVisible() {
-		return _visible;
-	}
-
-	/**
-	 * The method adds a listener to the window
-	 *
-	 * @param  listener  the listener to add
-	 */
-	public void addListener(WindowListener listener) {
-		_listenerManager.addListener(listener);
-	}
-
-	/**
-	 * The method closed the window, that is removes it from window stack and
-	 * eventually from the rendered display, if the window was visible.
-	 */
-	public void close() {
-		hide();
-		_closed = true;
-		WindowManager.removeWindow(this);
-	}
-
-	/**
-	 * The method hides the window
-	 */
-	public void hide() {
-		_visible = false;
-		WindowManager.doWindowVisibilityChange(this);
-	}
-
-	/**
-	 * The method moves the window to the top of the stack
-	 */
-	public void moveToTheTop() {
-		WindowManager.moveToTop(this);
-	}
-
-	/**
-	 * The method computes new window's layout. The method must already be called, if anything on the window building is changed, for example, a widget is
-	 * removed or isn't more focusable ( because not visible or other ).
-	 */
-	public void pack() {
-		cutIfNeeded();
-		configureRootPanel();
-		_root.pack();
-		loadFocusableChildren();
-		loadShortcuts();
-	}
-
-	/**
-	 * The method remove a listener from the window
-	 *
-	 * @param  listener  the listener to remove
-	 */
-	public void removeListener(WindowListener listener) {
-		_listenerManager.removeListener(listener);
-	}
-
-	/**
-	 * The method shows the window
-	 */
-	public void show() {
-		if (!isVisible()) {
-			WindowManager.createWindow(this);
-			pack();
-			_visible = true;
-			WindowManager.doWindowVisibilityChange(this);
-		}
-	}
-
-	/**
-	 * The method tries to close the window, after the user has typed 'escape' or another closing character. The procedure is as following: If the window has
-	 * listeners, then an event is sent to the listeners. The window can be closed bei listeners. Didn't listeners close the window, in leaves open. Has the
-	 * window no listeners, then the method closes it.
-	 *
-	 * @return    true if close was successful
-	 */
-	public boolean tryToClose() {
-		if (_listenerManager.countListeners() > 0) {
-			_listenerManager.handleEvent(new WindowEvent(this, WindowEvent.CLOSING));
-
-			return isClosed();
-		}
-
-		close();
-
-		return true;
-	}
-
-	/**
-	 * Returns the rectangle occupied by the window.
-	 *
-	 * @return    the rectangle occupied by the window
-	 */
-	protected Rectangle getRectangle() {
-		return _rect;
-	}
-
-	/**
-	 * Accounts for shadow is any
-	 *
-	 * @return    the rectangle occupied by the window
-	 */
-	protected Rectangle getClipRectangle() {
-		if (hasShadow()) {
-			return new Rectangle(_rect.getX(), _rect.getY(), _rect.getWidth() + 1, _rect.getHeight() + 1);
-		}
-
-		return _rect;
-	}
-
-	/**
-	 * The method is called, if the window gets focus.
-	 */
-	protected void activate() {
-		_listenerManager.handleEvent(new WindowEvent(this, WindowEvent.ACTIVATED));
-	}
-
-	/**
-	 *  Changes the focus between widgets and propagates the change notification.
-	 *  Internal only, should not be called by application code.
-	 *
-	 * @param  aWidgetIndex  Index of widget to receive focus.
-	 */
-	protected void changeFocus(int aWidgetIndex) {
-		if (aWidgetIndex != _currentIndex) {
-			if (isFocusableIndex(_currentIndex)) {
-				((Widget) _focusableChildren.get(_currentIndex)).setFocus(false);
-			}
-
-			_currentIndex = aWidgetIndex;
-
-			if (isFocusableIndex(aWidgetIndex)) {
-				((Widget) _focusableChildren.get(aWidgetIndex)).setFocus(true);
-			}
-		}
-	}
-
-	/**
-	 *  Changes the focus between widgets and propagates the change notification.
-	 *  Internal only, should not be called by application code. 
-	 *
-	 * @param  aWidget  the Widget itself to which the focus is to be changed.
-	 */
-	protected void changeFocus(Widget aWidget) {
-		changeFocus(_focusableChildren.indexOf(aWidget));
-	}
-
-	/**
-	 *  Changes the focus between widgets and propagates the change notification
-	 *  merely by incrementing the index, wrapping to zero (0) if necessary.
-	 *  Internal only, should not be called by application code. 
-	 */
-	protected void changeFocus() {
-		//changeFocus(Math.min(Math.max(0, _currentIndex + 1), _focusableChildren.size() - 1));
-		if (_currentIndex >= _focusableChildren.size() - 1 || _currentIndex < -1) {
-			changeFocus(0);
-		} else {
-			changeFocus(_currentIndex + 1);
-		}
-	}
-
-	/**
-	 *  Changes the focus between widgets and propagates the change notification
-	 *  based on a sense of direction in the relation of all widgets.
-	 *  Internal only, should not be called by application code. 
-	 *
-	 * @param  aDirection  One of the directions DIR_LEFT DIR_RIGHT DIR_UP DIR_DOWN 
-	 */
-	protected void moveFocus(int aDirection) {
-		if (_focusableChildren.isEmpty()) {
-			return;
-		}
-
-		Widget mCurrent = getCurrentWidget();
-
-		if (mCurrent == null) {
-			mCurrent = (Widget) _focusableChildren.get(0);
-		}
-
-		Widget mResult = mCurrent;
-
-        for (Object focusableChild : _focusableChildren) {
-            Widget mCandidate = (Widget) focusableChild;
-
-            if (mCandidate == mCurrent) {
-                continue;
-            }
-
-            Rectangle mCurRect = mCurrent.getRectangle();
-            Rectangle mCandRect = mCandidate.getRectangle();
-            Rectangle mResRect = mResult.getRectangle();
-
-            int vDelta = mCurRect.verticalDistanceFrom(mCandRect) - mCurRect.verticalDistanceFrom(mResRect);
-            int hDelta = mCurRect.horizontalDistanceFrom(mCandRect) - mCurRect.horizontalDistanceFrom(mResRect);
-
-            switch (aDirection) {
-                case DIR_LEFT:
-
-                    if (mCandRect.isLeftOf(mCurRect)) {
-                        if ((mResult == mCurrent) || (vDelta < 0) || ((vDelta == 0) && (hDelta < 0))) {
-                            mResult = mCandidate;
-                        }
-                    }
-
-                    break;
-                case DIR_RIGHT:
-
-                    if (mCandRect.isRightOf(mCurRect)) {
-                        if ((mResult == mCurrent) || (vDelta < 0) || ((vDelta == 0) && (hDelta < 0))) {
-                            mResult = mCandidate;
-                        }
-                    }
-
-                    break;
-                case DIR_UP:
-
-                    if (mCandRect.isAbove(mCurRect)) {
-                        if ((mResult == mCurrent) || (hDelta < 0) || ((hDelta == 0) && (vDelta < 0))) {
-                            mResult = mCandidate;
-                        }
-                    }
-
-                    break;
-                case DIR_DOWN:
-
-                    if (mCandRect.isBelow(mCurRect)) {
-                        if ((mResult == mCurrent) || (hDelta < 0) || ((hDelta == 0) && (vDelta < 0))) {
-                            mResult = mCandidate;
-                        }
-                    }
-
-                    break;
-            }
-        }
-
-		changeFocus(mResult);
-	}
-
-	/**
-	 * The method is called, if the window is to be closed.
-	 */
-	protected void closed() {
-		_closed = true;
-		_listenerManager.handleEvent(new WindowEvent(this, WindowEvent.CLOSED));
-	}
-
-	/**
-	 * The method is called, if the window loses focus.
-	 */
-	protected void deactivate() {
-		_listenerManager.handleEvent(new WindowEvent(this, WindowEvent.DEACTIVATED));
-	}
-
-	/**
-	 * The method is called by the library to handle an input character, if the window has the focus.
-	 *
-	 * @param  inp the object instance representing the input char
-	 */
-	protected void handleInput(InputChar inp) {
-		Widget cur = getCurrentWidget();
-
-		if ((cur != null) && cur.handleInput(inp)) {
-			return;
-		} else if (inp.equals(getClosingChar())) {
-			tryToClose();
-		} else if (inp.equals(getFocusChangeChar())) {
-			changeFocus();
-		} else if (inp.equals(__upChar)) {
-			moveFocus(DIR_UP);
-		} else if (inp.equals(__downChar)) {
-			moveFocus(DIR_DOWN);
-		} else if (inp.equals(__leftChar)) {
-			moveFocus(DIR_LEFT);
-		} else if (inp.equals(__rightChar)) {
-			moveFocus(DIR_RIGHT);
-		} else if (isShortCut(inp)) {
-			getWidgetByShortCut(inp).handleInput(inp);
-		} else {
-			onChar(inp);
-		}
-	}
-
-	/**
-	 * The method is called by <code>handleInput</code>, if no widget has handled the input. Derived classes can override the method to define additional
-	 * shortcuts.
-	 *
-	 * @param  inp the object instance representing the input char
-	 */
-	protected void onChar(InputChar inp) {
-		//default nothing
-	}
-
-	/**
-	 * The method paint's the window
-	 */
-	protected void paint() {
-		drawThingsIfNeeded();
-		_root.paint();
-	}
-
-	/**
-	 * Currently the method makes the same as repaint, in next versions the method will repaint only the part of the window, that was hided.
-	 */
-	protected void repaint() {
-		if (isVisible()) {
-			drawThingsIfNeeded();
-			_root.repaint();
-		}
-	}
-
-	/**
-	 *  Resize to specified size 
-	 *
-	 * @param  width   width
-	 * @param  height  height
-	 */
-	protected void resize(int width, int height) {
-		_rect.setWidth(width);
-		_rect.setHeight(height);
-	}
-
-	/**
-	 *  Gets the currentWidget attribute of the Window object
-	 *
-	 * @return    The currentWidget value
-	 */
-	private Widget getCurrentWidget() {
-		if (isFocusableIndex(_currentIndex)) {
-			return ((Widget) _focusableChildren.elementAt(_currentIndex));
-		}
-
-		return null;
-	}
-
-	/**
-	 *  Gets the defaultClosingChar attribute of the Window object
-	 *
-	 * @return    The defaultClosingChar value
-	 */
-	private InputChar getDefaultClosingChar() {
-		return __defaultClosingChar;
-	}
-
-	/**
-	 *  Gets the defaultFocusChangeChar attribute of the Window object
-	 *
-	 * @return    The defaultFocusChangeChar value
-	 */
-	private InputChar getDefaultFocusChangeChar() {
-		return __defaultFocusChangeChar;
-	}
-
-	/**
-	 *  Gets the focusableIndex attribute of the Window object
-	 *
-	 * @param  aIdx  Description of the Parameter
-	 * @return       The focusableIndex value
-	 */
-	private boolean isFocusableIndex(int aIdx) {
-		return (aIdx >= 0) && (aIdx < _focusableChildren.size());
-	}
-
-	/**
-	 * Input handler to identify shortcuts <br>
-	 * There are four important cases:
-	 * <ol>
-	 * <li>Window close key was entered</li>
-	 * <li>Shift focus to next widget key was entered</li>
-	 * <li>Some other defined shortcut key was entered</li>
-	 * <li>Handling input from a child that has the focus</li>
-	 * </ol>
-	 * Handling of the input. <br>
-	 * Four possible cases: <br>
-	 * 1. Close window. <br>
-	 * 2. Jump to the next widget. <br>
-	 * 3. Process shortcut. <br>
-	 * 4. Let the child that currently has focus handle the input.
-	 *
-	 * @param  inp  object instance representing the input char
-	 * @return      true if this char is to be handled as a shortcut
-	 */
-	private boolean isShortCut(InputChar inp) {
-		return (_shortCutsList.contains(inp));
-	}
-
-	/**
-	 *  Finds a widget from its associated shortcut char
-	 *
-	 * @param  inp  object instance representing the input char.
-	 * @return      The widget indexed in the shortcuts by the input char
-	 */
-	private Widget getWidgetByShortCut(InputChar inp) {
-		return (Widget) _shortCutsTable.get(inp);
-	}
-
-	/**
-	 *  Create (if necessary) a root panel and do some rectangle math on
-	 * the root panel so it fits
-	 */
+	
+	
 	private void configureRootPanel() {
 		if (_root == null) {
 			_root = new Panel();
 		}
-
+		
 		int x = _rect.getX();
 		int y = _rect.getY();
 		int width = _rect.getWidth();
 		int height = _rect.getHeight();
-
-		if (_border) {
-			x++;
-			y++;
-			width -= 2;
-			height -= 2;
-		}
-
-		_root.setSize(new Rectangle(width, height));
-		_root.setX(x);
-		_root.setY(y);
+		
+		int x1 = _border?x+1:x;
+		int y1 = _border?y+1:y;
+		int w =  _border?width-2:width;
+		int h =  _border?height-2:height;
+		
+		_root.setSize(new Rectangle(w, h));
+		_root.setX(x1);
+		_root.setY(y1);
+		
 	}
-
+	
+	
 	/**
-	 *  Clip a rectangle
-	 */
+	*  The method shows the window
+	*/
+	public void show() {
+		setVisible(true);
+	}
+	
+	/**
+	*  The method hides the window
+	*/
+	
+	public void hide() {
+		setVisible(false);
+	}
+	
+	
+	/**
+	* The method changes the window's visibility status
+    * 
+    * @param value true, if the window becomes visible, false in other case
+	*/
+	
+	public void setVisible(boolean value){
+		Window oldTop = WindowManager.getTopWindow();
+		if (value) {
+			pack();
+			_visible = value;
+			WindowManager.makeWindowVisible(this, oldTop);
+		} else {
+			_visible = value;
+			WindowManager.makeWindowInvisible(this, oldTop);
+		}
+	}
+	
+	
+    /**
+    *  The method returns the window's visibility status
+    * @return true, if the window becomes visible, false in other case
+    */
+	public boolean isVisible() {
+		return _visible;
+	}
+	
+    /**
+    *  The method paint's the window
+    */
+	
+	protected void paint() {
+		drawThingsIfNeeded();
+		_root.paint();
+	}
+	
+    
+    /**
+    *  Currently the method makes the same as repaint, in next versions the method
+    * will repaint only the part of the window, that was hided.
+    */
+	
+	protected void repaint() {
+		drawThingsIfNeeded();
+		_root.repaint();
+	}
+	
+	/**
+	*  @return the rectangle occupied by the window
+	*/
+	
+	protected Rectangle getRectangle() {
+		return _rect;
+	}
+	
+	/**
+	*  The method closed the window, that is removes it from window stack an
+    *  evantually from screen, if it was visible. 
+	*/
+	
+	public void close() {
+		WindowManager.removeWindow(this);
+	}
+    
+	
+	/**
+	* The method moves the window to the top of the stack
+	*/
+	
+	public void moveToTheTop() {
+		WindowManager.moveToTop(this);
+	}
+	
+	/**
+	*  Folgende Methoden bestimmen das zeichen das benutzt wird, um das Fenster zu schlie�en
+	*/
+	
+	private static InputChar __defaultClosingChar = new InputChar(27);//escape character
+	private InputChar  _closingChar = getDefaultClosingChar();
+	
+	
+	private InputChar getDefaultClosingChar() {
+		return __defaultClosingChar;
+	}
+	
+	
+    /**
+    *  The method returns the character to close window. 
+    * As default is escape characted defined
+    * 
+    * @return window's closing character
+    */
+	public InputChar getClosingChar() {
+		return _closingChar;
+	}
+	
+	
+	
+    /**
+    *  The method defines a new window's closing character. Default is escape.
+    * @param character new  window's closing character
+    */
+	public void setClosingChar(InputChar character) {
+ 		_closingChar = character;
+	}
+	
+	
+	
+	private static InputChar __defaultFocusChangeChar = new InputChar('\t');//tab character
+	private InputChar  _focusChangeChar = getDefaultFocusChangeChar();
+	
+	
+	private InputChar getDefaultFocusChangeChar() {
+		return __defaultFocusChangeChar;
+	}
+	
+	/**
+	*  The method returns the charater used to navigate (change the focus) between widgets
+    * within the window. Default is 'tab'
+    * 
+    * @return window's focus changing charater
+	*/
+	public InputChar getFocusChangeChar() {
+		return _focusChangeChar;
+	}
+	
+	
+	/**
+	*  The method defined the charater used to navigate (change the focus) between widgets
+    * within the window. Default is 'tab'
+    * 
+    * @param character new window's focus changing charater
+	*/
+	public void setFocusChangeChar(InputChar character) {
+ 		_focusChangeChar = character;
+	}
+	
+	/**
+	*  Behandlung der Eingabe. 
+	*  Vier m�gliche F�lle:
+	*  1. Fenster schliessen.
+	*  2. Zum n�chsten Widget springen.
+	*  3. Shortcut bearbeiten.
+	*  3. Eingabe vom aktuell Fokus habenden Kind bearbeiten lassen. 
+	*/
+	
+	
+	private boolean isShortCut(InputChar inp) {
+		return (_shortCutsList.indexOf(inp)!=-1);
+	}
+	
+	
+	private Widget getWidgetByShortCut(InputChar inp) {
+		return (Widget)_shortCutsTable.get(inp);
+	}
+	
+	
+	private static InputChar __upChar = new InputChar(InputChar.KEY_UP);
+	private static InputChar __downChar = new InputChar(InputChar.KEY_DOWN);
+	private static InputChar __leftChar = new InputChar(InputChar.KEY_LEFT);
+	private static InputChar __rightChar = new InputChar(InputChar.KEY_RIGHT);
+	
+	/**
+	*  The method tries to close the window, after the user has typed 'escape' 
+    * or an other closing character. The procedure is as following:
+    * If the window has listeners, than an event is sent to the listeners. The window
+    * can be closed bei listeners. Did'nt listeners close the window, in leaves open.
+    * Has the window no listeners, than the method closes it.
+    * 
+	*/
+	
+	public boolean tryToClose() {
+		if (_listenerManager.countListeners() > 0) {
+			_listenerManager.handleEvent(new WindowEvent(this, WindowEvent.CLOSING));
+			return isClosed();
+		} else {
+			close();
+			return true;
+		}
+	}
+	
+    
+    /**
+    *  @return true, if the window is already closed, false in othe case.
+    */
+	
+	public boolean isClosed() {
+		return _closed;
+	}
+	
+	
+    /**
+    *  The method is called by the libray to handle an input character, if the window has the focus.
+    */
+	protected void handleInput(InputChar inp) {
+		if (inp.equals(getClosingChar())) {
+			tryToClose();
+		}  else if (inp.equals(getFocusChangeChar())) {
+		   changeFocus();
+		}  else if (inp.equals(__upChar)) {
+		   Widget cur = getCurrentWidget();
+		   if (cur != null) {
+		   	  boolean result = cur.handleInput(inp);
+			  if (!result) {
+				 changeFocus(2);	
+			  }	
+		   }
+		}  else if (inp.equals(__downChar)) {
+		   Widget cur = getCurrentWidget();
+		   if (cur != null) {
+		   	  boolean result = cur.handleInput(inp);
+			  if (!result) {
+				 changeFocus(3);	
+			  }	
+		   }
+		}  else if (inp.equals(__leftChar)) {
+		   Widget cur = getCurrentWidget();
+		   if (cur != null) {
+		   	  boolean result = cur.handleInput(inp);
+			  if (!result) {
+				 changeFocus(0);	
+			  }	
+		   }
+		}  else if (inp.equals(__rightChar)) {
+		   Widget cur = getCurrentWidget();
+		   if (cur != null) {
+		   	  boolean result = cur.handleInput(inp);
+			  if (!result) {
+				 changeFocus(1);	
+			  }	
+		   }
+		} else if (isShortCut(inp)) {
+			Widget cur = getCurrentWidget();
+			if  (cur!=null) {
+				boolean result = cur.handleInput(inp);
+				if (!result) {
+					getWidgetByShortCut(inp).handleInput(inp);	
+				}
+			}
+		}  else {
+			if (!handleInputByCurrentChild(inp)) {
+				onChar(inp);
+			} 
+		}
+	}
+	
+	
+	/**
+	* The method is called by <code>handleInput</code>, if no widget has handled
+    * the input. Derived classes can override the method to define additional shortcuts.
+	*/
+	
+	protected void onChar(InputChar inp) {
+		//default nothing
+	}
+	
+	
+	private void changeFocus() {
+		if (_currentIndex != -1) {
+			int newIndex = (_currentIndex == (_focusableChilds.size()-1))?0:(_currentIndex+1);
+			if (newIndex!=_currentIndex) {
+				((Widget)_focusableChilds.elementAt(_currentIndex)).setFocus(false);
+				((Widget)_focusableChilds.elementAt(newIndex)).setFocus(true);
+				_currentIndex = newIndex;
+			}
+		} 
+	}
+	
+	
+	private void changeFocus(int direction) {
+		if (_currentIndex != -1) {
+			changeFocus(getNextWidget(direction));
+		}
+	}
+	
+	
+	
+	private Widget getNextWidget(int direction) { 
+		Widget result = getCurrentWidget();
+		Widget current = getCurrentWidget();
+		int x = result.getAbsoluteX();
+		int y = result.getAbsoluteY();
+		int searchDirection = ((direction == 0) || (direction == 2))?-1:1;
+		
+		Vector widgets = _focusableChilds;
+		int index = widgets.indexOf(result);
+		if (index < 0) {
+			throw new RuntimeException("widget in the sorted queue not found!!");
+		}
+		
+		int distance = Integer.MAX_VALUE; 
+		while (index < widgets.size() && index > -1)  {
+			index+=searchDirection;
+			if (index < widgets.size() && index > -1) {
+				Widget candidate = (Widget)widgets.get(index);
+				if (((direction == 0) && WindowWidgetComparator.toTheLeftOf(candidate, current)) ||
+					((direction == 1) && WindowWidgetComparator.toTheRightOf(candidate, current)) ||
+					((direction == 2) && WindowWidgetComparator.atTheTopOf(candidate, current)) ||
+					((direction == 3) && WindowWidgetComparator.atTheBottomOf(candidate, current))) {
+					int newDistance = WindowWidgetComparator.getDistance(candidate, current);
+					if (newDistance < distance) {
+						distance = newDistance;
+						result = candidate;
+					}
+				}
+			}
+				
+		}
+		
+		return result;
+		
+	}
+	
+	
+	
+	
+	void changeFocus(Widget widget) {
+		int newIndex = _focusableChilds.indexOf(widget);
+		if (newIndex!=-1) {
+			if (_currentIndex == -1) {
+				widget.setFocus(true);
+				_currentIndex = newIndex;
+			} else if (_currentIndex == newIndex) {
+			} else {
+			  widget.setFocus(true);
+			  ((Widget)_focusableChilds.elementAt(_currentIndex)).setFocus(false);
+			   _currentIndex = newIndex;
+			}
+				
+		}
+	}
+	
+	
+	private Widget getCurrentWidget() {
+		if (_currentIndex != -1) {
+			return  ((Widget)_focusableChilds.elementAt(_currentIndex));
+		} else {
+			return null;
+		}
+	}
+	
+	private boolean handleInputByCurrentChild(InputChar inp) {
+		if (_currentIndex != -1) {
+			return ((Widget)_focusableChilds.elementAt(_currentIndex)).handleInput(inp);
+		} 
+		
+		return false;
+	}
+	
+	
+	
+	private void loadShortcuts() {
+		_shortCutsList.clear();
+		_shortCutsTable.clear();
+		
+		Vector list = _root.getListOfWidgetsWithShortCuts();
+		for (int i=0; i<list.size(); i++) {
+			Widget widget = (Widget)list.elementAt(i);
+			Vector shortCuts = widget.getShortCutsList();
+			_shortCutsList.addAll(shortCuts);
+			for (int j=0; j< shortCuts.size(); j++) {
+				_shortCutsTable.put(shortCuts.elementAt(j), widget);
+			}
+		}
+		
+	}
+	
+	private void loadFocusableChilds() {
+		_focusableChilds = _root.getListOfFocusables();
+		if (_focusableChilds.size() == 0) {
+			_currentIndex = -1;
+		} else {
+			Collections.sort(_focusableChilds, new WindowWidgetComparator());
+			_currentIndex = 0;
+			((Widget)_focusableChilds.elementAt(0)).setFocus(true);
+		}
+	}
+	
+	
+    /**
+    *  The method computes new window's layout.
+	*  The method must already be called, if anything on the window building
+	*  is changed, for example, an widget is removed or isn't more focusable
+	* ( because not visible or other ).
+    */
+	public void pack() {
+		cutIfNeeded();
+		configureRootPanel();
+		_root.pack();
+		loadFocusableChilds();
+		loadShortcuts();
+		
+	}
+	
+	
 	private void cutIfNeeded() {
-		int maxWidth = Toolkit.getScreenWidth() - _rect.getX() - (_hasShadow ? 1 : 0);
+		int maxWidth = Toolkit.getScreenWidth()-_rect.getX()-(_hasShadow?1:0);
+		int maxHeight = Toolkit.getScreenHeight()-_rect.getY()-(_hasShadow?1:0);
+		
+			
 		if (_rect.getWidth() > maxWidth) {
 			_rect.setWidth(maxWidth);
 		}
-
-		int maxHeight = Toolkit.getScreenHeight() - _rect.getY() - (_hasShadow ? 1 : 0);
+		
 		if (_rect.getHeight() > maxHeight) {
 			_rect.setHeight(maxHeight);
 		}
+		
+	
+		
 	}
-
-	/**
-	 * Draw features like border and title if needed
-	 */
+	
+	
+	
+    /**
+    *  @return the root panel of the window
+    */
+	public Panel getRootPanel() {
+		//Ein kommentar
+		return _root;
+	}
+	
+    
+    /**
+    *  Sets the root panel of the window. This is the top most widget container in the 
+    *  window's widget hierarchy. It occupies the entire window out of the border (if exists ).
+    */
+	
+	public void setRootPanel(Panel root) {
+		_root = root;	
+		_root.setWindow(this);
+	}
+	
+	
 	private void drawThingsIfNeeded() {
 		if (_border) {
 			Toolkit.drawBorder(_rect, getBorderColors());
 		}
-
+		
 		paintTitle();
-	}
-
-	/**
-	 *  Load and show in order (i.e., changing focus) each of the window's focusable children.
-	 */
-	private void loadFocusableChildren() {
-		_focusableChildren = _root.getListOfFocusables();
-		if (!isFocusableIndex(_currentIndex)) {
-			changeFocus();
+		
+		if (hasShadow()) {
+			Toolkit.drawRectangle(_rect.getX()+_rect.getWidth(),
+								  _rect.getY()+1,
+								  1,
+								  _rect.getHeight(), getShadowColors());
+			Toolkit.drawRectangle(_rect.getX()+1,
+								  _rect.getY()+_rect.getHeight(),
+								  _rect.getWidth(),
+								  1, getShadowColors());
+										
 		}
 	}
-
-	/**
-	 *  Load the shortcut table
-	 */
-	private void loadShortcuts() {
-		_shortCutsList.clear();
-		_shortCutsTable.clear();
-
-		Vector list = _root.getListOfWidgetsWithShortCuts();
-
-		for (int i = 0; i < list.size(); i++) {
-			Widget widget = (Widget) list.elementAt(i);
-			Vector shortCuts = widget.getShortCutsList();
-			_shortCutsList.addAll(shortCuts);
-
-			for (int j = 0; j < shortCuts.size(); j++) {
-				_shortCutsTable.put(shortCuts.elementAt(j), widget);
-			}
-		}
-	}
-
-	/**
-	 *  Paint the title
-	 */
+	
+	
 	private void paintTitle() {
-		if (_title != null) {
-			Toolkit.printString(_title, _rect.getX() + ((_rect.getWidth() - _title.length()) / 2), _rect.getY(), getTitleColors());
+		if (_title!=null) {
+			CharColor color = getTitleColors();
+			Toolkit.printString( _title, _rect.getX()+(_rect.getWidth()-_title.length())/2,_rect.getY(), color);
 		}
 	}
-
-	/**
-	 * Get the Window title
-	 * @return    Returns the title.
-	 */
-	public String getTitle() {
-		return _title;
+	
+	
+	
+	private static CharColor __defaultBorderColors = new CharColor(CharColor.WHITE, CharColor.BLACK);
+	private CharColor _borderColors = getDefaultBorderColors();
+	
+	public CharColor getDefaultBorderColors() {
+		return __defaultBorderColors;
 	}
-
-	/**
-	 * Set the Window title
-	 * @param  aTitle  The title to set.
-	 */
-	public void setTitle(String aTitle) {
-		_title = aTitle;
-		repaint();
+	
+	
+	public CharColor getBorderColors() {
+		return _borderColors;
 	}
+	
+	
+	public void setBorderColors(CharColor colors) {
+		_borderColors = colors;
+	}
+	
+	/**
+	*  Normaler title
+	*/
+	
+	
+	private static CharColor __defaultTitleColors = new CharColor(CharColor.WHITE, CharColor.RED);
+	private CharColor _titleColors = getDefaultTitleColors();
+	
+	public CharColor getDefaultTitleColors() {
+		return __defaultTitleColors;
+	}
+	
+	
+	public CharColor getTitleColors() {
+		return _titleColors;
+	}
+	
+	
+	public void setTitleColors(CharColor colors) {
+		_titleColors = colors;
+	}
+	
+	/**
+	* The method defines, whether the window is to paint with a shadow
+    * 
+    * @param value true if a shadow is to paint, false in othe case
+	*/
+	public void setShadow(boolean value) {
+		_hasShadow=value;
+	}
+	
+	
+	boolean hasShadow() {
+		return _hasShadow;
+	}
+	
+	
+	private static CharColor __shadowColors = new CharColor(CharColor.BLACK, CharColor.BLACK);
+	
+	private CharColor getShadowColors() {
+		return __shadowColors;
+	}
+	
+	
+	//Listener-Zeugs
+	
+	private WindowListenerManager _listenerManager = new WindowListenerManager();
+	
+	/**
+	*  The method adds a listener to the window
+    * 
+    * @param listener the listener to add
+	*/
+	public void addListener(WindowListener listener) {
+		_listenerManager.addListener(listener);
+	}
+	
+	
+    /**
+	*  The method remove a listener from the window
+    * 
+    * @param listener the listener to remove
+	*/
+	public void removeListener(WindowListener listener) {
+		_listenerManager.removeListener(listener);
+	}
+	
+	
+    /**
+    *  The method is called, if the window gets focus.
+    */
+	protected void activate() {
+		_listenerManager.handleEvent(new WindowEvent(this, WindowEvent.ACTIVATED));
+	}
+	
+	
+    /**
+    *  The method is called, if the window loses focus.
+    */
+	protected void deactivate() {
+		_listenerManager.handleEvent(new WindowEvent(this, WindowEvent.DEACTIVATED));
+	}
+	
+	/**
+    *  The method is called, if the window is closed.
+    */
+	protected void closed() {
+		_closed = true;
+		_listenerManager.handleEvent(new WindowEvent(this, WindowEvent.CLOSED));
+	}
+	
+	
+   
+	protected void resize(int width, int height) {
+		_rect.setWidth(width);
+		_rect.setHeight(height);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 }
 
-/**
- *  A class of utility comparators for Widget positions in Windows.
- *
- */
+
 class WindowWidgetComparator implements Comparator {
+	
+	
+	
+	// methods to compare widget positions
+	static boolean toTheLeftOf(Widget widget1, Widget widget2) {
+		Rectangle rect1 = widget1.getRectangle();
+		Rectangle rect2 = widget2.getRectangle();
+		boolean result = ((rect1.getX()+rect1.getWidth()-1) < rect2.getX());
+		return result; 
+	}
+	
 
-	/**
-	 *  Description of the Method
-	 *
-	 * @param  obj1  Description of the Parameter
-	 * @param  obj2  Description of the Parameter
-	 * @return       Description of the Return Value
-	 */
+	static boolean toTheRightOf(Widget widget1, Widget widget2) {
+		Rectangle rect1 = widget1.getRectangle();
+		Rectangle rect2 = widget2.getRectangle();
+		boolean result = ((rect1.getX()) > (rect2.getX()+rect2.getWidth()-1)); 
+		return  result;
+	}
+	
+	static boolean atTheTopOf(Widget widget1, Widget widget2) {
+		Rectangle rect1 = widget1.getRectangle();
+		Rectangle rect2 = widget2.getRectangle();
+		boolean result = ((rect1.getY()+rect1.getHeight()-1) < rect2.getY()); 
+		return result;
+	}
+	
+	static boolean atTheBottomOf(Widget widget1, Widget widget2) {
+		Rectangle rect1 = widget1.getRectangle();
+		Rectangle rect2 = widget2.getRectangle();
+		boolean result = ((rect1.getY()) > (rect2.getY()+rect2.getHeight()-1)); 
+		return  result;
+	}
+	
+	static int getDistance(Widget widget1, Widget widget2) {
+		Rectangle rect1 = widget1.getRectangle();
+		Rectangle rect2 = widget2.getRectangle();
+		int x1 = rect1.getX()+(rect1.getWidth()/2);
+		int y1 = rect1.getY()+(rect1.getHeight()/2);
+		int x2 = rect2.getX()+(rect2.getWidth()/2);
+		int y2 = rect2.getY()+(rect2.getHeight()/2);
+		
+		return (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
+		
+	}
+	
+	
 	public int compare(Object obj1, Object obj2) {
-		if (obj1 instanceof Widget && obj2 instanceof Widget) {
-			Widget widget1 = (Widget) obj1;
-			Widget widget2 = (Widget) obj2;
-
-			if (isBelow(widget1, widget2)) {
-				return 1;
-			}
-
-			if (isAbove(widget1, widget2) || isLeft(widget1, widget2)) {
-				return -1;
-			}
-
-			if (isRight(widget1, widget2)) {
-				return 1;
-			}
-
-			return 0;
+		if ((!(obj1 instanceof Widget)) || (!(obj2 instanceof Widget))) {
+			throw new RuntimeException("unknown classes to compare");
 		}
-
-		return obj2.hashCode() - obj1.hashCode();
+		
+		Widget widget1 = (Widget)obj1;
+		Widget widget2 = (Widget)obj2;
+		
+		int result = 0;
+		
+		if (atTheTopOf(widget1, widget2)) {
+			result = -1;
+		} else if  (atTheBottomOf(widget1, widget2)) {
+			result = 1;
+		} else {
+			if (toTheLeftOf(widget1, widget2)) {
+				result = -1;
+			} else if (toTheRightOf(widget1, widget2)) {
+				result = 1;
+			} else {
+				result = 0;
+			}
+		}
+		
+		
+		return result;
+		
 	}
-
-	/**
-	 *  Tests if one widget is above another
-	 *
-	 * @param  aWidget     Widget A
-	 * @param  aWidgetRef  Widget B
-	 * @return             true IFF A .ABOVE. B
-	 */
-	static boolean isAbove(Widget aWidget, Widget aWidgetRef) {
-		return aWidget.getRectangle().isAbove(aWidgetRef.getRectangle());
-	}
-
-	/**
-	 *  Tests if one widget is above another
-	 *
-	 * @param  aWidget     Widget A
-	 * @param  aWidgetRef  Widget B
-	 * @return             true IFF A .BELOW. B
-	 */
-	static boolean isBelow(Widget aWidget, Widget aWidgetRef) {
-		return aWidget.getRectangle().isBelow(aWidgetRef.getRectangle());
-	}
-
-	/**
-	 *  Gets the distance between two widgets
-	 *
-	 * @param  aWidget     Widget A
-	 * @param  aWidgetRef  Widget B
-	 * @return             The distance between A and B
-	 
-	 */
-	static int getDistance(Widget aWidget, Widget aWidgetRef) {
-		return aWidget.getRectangle().distanceFrom(aWidgetRef.getRectangle());
-	}
-
-	/**
-	 *  Gets the horizontal distance between two widgets.
-	 *
-	 * @param  aWidget     Widget A
-	 * @param  aWidgetRef  Widget B
-	 * @return             The horizontal distance between A and B
-	 */
-	static int getHorizontalDistance(Widget aWidget, Widget aWidgetRef) {
-		return aWidget.getRectangle().horizontalDistanceFrom(aWidgetRef.getRectangle());
-	}
-
-	/**
-	 * True if Widget A is left of Widget B
-	 *
-	 * @param  aWidget     Widget A
-	 * @param  aWidgetRef  Widget B
-	 * @return             True if Widget A is left of Widget B
-	 */
-	static boolean isLeft(Widget aWidget, Widget aWidgetRef) {
-		return aWidget.getRectangle().isLeftOf(aWidgetRef.getRectangle());
-	}
-
-	/**
-	 * True if Widget A is right of Widget B
-	 *
-	 * @param  aWidget     Widget A
-	 * @param  aWidgetRef  Widget B
-	 * @return             True if Widget A is right of Widget B
-	 */
-	static boolean isRight(Widget aWidget, Widget aWidgetRef) {
-		return aWidget.getRectangle().isRightOf(aWidgetRef.getRectangle());
-	}
-
-	/**
-	 *  Gets the vertical distance between two widgets.
-	 *
-	 * @param  aWidget     Widget A
-	 * @param  aWidgetRef  Widget B
-	 * @return             The vertical distance between A and B
-	 */
-	static int getVerticalDistance(Widget aWidget, Widget aWidgetRef) {
-		return aWidget.getRectangle().verticalDistanceFrom(aWidgetRef.getRectangle());
-	}
+	
 }
