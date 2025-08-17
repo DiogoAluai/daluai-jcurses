@@ -1,13 +1,13 @@
 
 package jcurses.system;
 
+import jcurses.util.Rectangle;
+import jcurses.util.TextUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-
-import jcurses.util.Rectangle;
-import jcurses.util.TextUtils;
 
 /**
  * This class is the 'work factory' of the jcurses library. It contains methods for primitive input and output operations and is only interface
@@ -43,25 +43,25 @@ public class Toolkit {
     public static final short UR_CORNER = 5;
 
     
-    private static long []__attributes = {0 ,0 ,0} ;
-    private static short []__basicColors = {0 ,0 ,0 ,0 ,0 ,0 ,0 ,0} ;
-    private static short [][]__colorpairs = new short [8][8];
-    private static Hashtable __clips = new Hashtable();
-    private static short __maxColorPairNumber = - 1;
-    private static String __encoding;
-    // private static final String JAR_RESOURCE         = "jar:file:";
-    // private static final String FILE_RESOURCE        = "file:";
+    private static final long []__attributes = {0 ,0 ,0} ;
+    private static final short []__basicColors = {0 ,0 ,0 ,0 ,0 ,0 ,0 ,0} ;
+    private static final short [][]__colorpairs = new short [8][8];
+    private static final Hashtable __clips = new Hashtable();
+
     private static final String LIBRARY_NAME = "jcurses";
 
+    private static short __maxColorPairNumber = - 1;
+    private static String __encoding;
+
     static {
-    	List<String> searchPaths = new ArrayList<String>();
+    	List<String> searchPaths = new ArrayList<>();
     	final String osName = System.getProperty("os.name").toLowerCase();
     	String libExtension = null;
-		if (osName.indexOf("linux") >= 0) {
+		if (osName.contains("linux")) {
     		libExtension = ".so";
-		} else if (osName.indexOf("win") >= 0) {
+		} else if (osName.contains("win")) {
     		libExtension = ".dll";
-		} else if (osName.indexOf("mac") >= 0) {
+		} else if (osName.contains("mac")) {
     		libExtension = ".jnilib"; // TODO not sure
     	}
     	// $PWD/jcurses.so
@@ -109,7 +109,7 @@ public class Toolkit {
     }
 
     /**
-     * The method sets the clippping rectangle for the current thread. All the output operations, that are performed by this thread after a call of this method,
+     * The method sets the clipping rectangle for the current thread. All the output operations, that are performed by this thread after a call of this method,
      * will paint only within the clip rectangle. If other clips were set before this, then the used clip rectangle is the intersection of all clip rectangles set
      * by current thread.
      *
@@ -142,7 +142,7 @@ public class Toolkit {
      * Gets java encoding for string input and output operations
      *
      *
-     * @return    the java encoding used by sring input and output operations
+     * @return    the java encoding used by string input and output operations
      */ 
     public static String getEncoding() {
         return __encoding;
@@ -165,12 +165,12 @@ public class Toolkit {
     public static synchronized native int getScreenWidth();
 
     /**
-     * The method to make an audio alert. Works only with terminals, that support 'beeps', under windows currenty does nothing.
+     * The method to make an audio alert. Works only with terminals, that support 'beeps', under windows currently does nothing.
      */ 
     public static synchronized native void beep();
 
     /**
-     * The method changes the background and the foreground colors of an given rectangle on the schreen
+     * The method changes the background and the foreground colors of a given rectangle on the screen
      *
      *
      * @param  aRect   rectangle, whose colors are to be changed
@@ -216,8 +216,8 @@ public class Toolkit {
     /**
      * The method draws a border on the screen.
      *
-     * We brea kdow nthe logic of line drawing here so we can properly take advantage of the clipping functionality at this level, rather than using the
-     * underlying curses border routines. We pass anything we can to underlying primitives however.
+     * We break down the logic of line drawing here so we can properly take advantage of the clipping functionality at this level, rather than using the
+     * underlying curses border routines. However, we pass anything we can to underlying primitives.
      *
      *
      * @param  aX       the x coordinate of the top left corner of the border to be painted
@@ -269,12 +269,12 @@ public class Toolkit {
     /**
      *  The method draws a corner
      *
-     * @param  aX     the x coordinate of the top left corner of the clip to be painted
-     * @param  aY     the y coordinate of the top left corner of the clip to be painted
-     * @param  aPos   Position enum (UL,LL,UR,LR)
-     * @param  mPair  Color pair number
-     * @param  mAttr  Attribute
-     */ 
+     * @param  aX               the x coordinate of the top left corner of the clip to be painted
+     * @param  aY               the y coordinate of the top left corner of the clip to be painted
+     * @param  aPos             Position enum (UL,LL,UR,LR)
+     * @param  colorPairNumber  Color pair number
+     * @param  attr             Attribute
+     */
     private static synchronized native void drawCorner(int aX, int aY,
              int aPos, short colorPairNumber, long attr);
 
@@ -364,7 +364,7 @@ public class Toolkit {
     }
 
     /**
-     *  The method draws a rectangle on the screen constrainted within a clipping rect and
+     *  The method draws a rectangle on the screen constrained within a clipping rect and
      *  filled with background part of <code>color</code>
      *
      * @param  aX      the x coordinate of the top left corner of the rectangle to be painted
@@ -489,7 +489,7 @@ public class Toolkit {
     }
 
     /**
-     * The method prints a string on the screen. If the string doesn't fit within the rectangle bounds, it wiil be broken.
+     * The method prints a string on the screen. If the string doesn't fit within the rectangle bounds, it will be broken.
      *
      *
      * @param  aText   string to be printed
@@ -512,7 +512,7 @@ public class Toolkit {
      *
      * The method prints a string on the screen constrained within a clipping
      * rectangle. If the string doesn't fit within the rectangle bounds, it
-     * wiil be line-broken.
+     * will be line-broken.
      *
      *
      * @param  aText   string to be printed
@@ -572,11 +572,10 @@ public class Toolkit {
     /**
      * Target for character read synchronizing
      */ 
-    private static Integer readSync = new Integer(0);
+    private static final Integer readSync = new Integer(0);
 
     /**
-     * The method reads the next code (ascii or control ) from an input stream an wraps it into an instance of {@link jcurses.system.InputChar}
-     *
+     * The method reads the next code (ascii or control ) from an input stream and wraps it into an instance of {@link jcurses.system.InputChar}
      *
      * @return    the next read code
      */ 
@@ -610,7 +609,7 @@ public class Toolkit {
 
     /**
      * The method starts a new painting action, containing possible many painting operations After a call of this method endPainting must be already called, to
-     * refersh the screen.
+     * refresh the screen.
      */ 
     public static synchronized native void startPainting();
 
@@ -624,11 +623,11 @@ public class Toolkit {
             return;
         }
 
-        if (clips.size() > 0) {
+        if (!clips.isEmpty()) {
             clips.remove(clips.size() - 1);
         }
 
-        if (clips.size() == 0) {
+        if (clips.isEmpty()) {
             __clips.remove(Thread.currentThread());
         }
     }
@@ -638,7 +637,7 @@ public class Toolkit {
      *
      * @return    The basicColors value
      */ 
-    static short []getBasicColors() {
+    static short[] getBasicColors() {
         return __basicColors;
     }
 
@@ -663,13 +662,8 @@ public class Toolkit {
             __colorpairs[aColor.getBackground()][aColor.getForeground()] = number;
             initColorPair(mapBasicColor(aColor.getBackground()),
                      mapBasicColor(aColor.getForeground()), number);
-
-            //System.err.println("NEW COLOR: [" + aColor.toString() + "] = [" + number + "] {" + mapBasicColor(aColor.getBackground()) + "} {" +
-            // mapBasicColor(aColor.getForeground()) + "}");
         }
 
-        //System.err.println("USE COLOR: [" + aColor.toString() + "] = [" + number + "]");
- 
         return number;
     }
 
@@ -701,7 +695,7 @@ public class Toolkit {
     private static Rectangle getCurrentClipRectangle() {
         ArrayList clips = (ArrayList) __clips.get(Thread.currentThread());
 
-        if ((clips == null) || (clips.size() == 0)) {
+        if ((clips == null) || (clips.isEmpty())) {
             return null;
         }
 
@@ -768,9 +762,6 @@ public class Toolkit {
     private static synchronized native void clearScreen(short colorPairNumber,
              long attributes);
 
-
-    //private static native int computeChtype(short number);
- 
     /**
      *  Description of the Method
      *
@@ -879,7 +870,6 @@ public class Toolkit {
      */ 
     public static void adjustBaseColor(short aNumber, int aRed, int aGreen,
              int aBlue) {
-
         adjustColor(__basicColors[aNumber], (short) aRed, (short) aGreen,
                  (short) aBlue);
 
@@ -917,66 +907,6 @@ public class Toolkit {
         }
     }
 
-    //  private static void loadLibrary()
-    //  {
-    /*
-     *  System.out.println(System.mapLibraryName(LIBRARY_NAME));
-     *  System.out.println(System.getProperty("java.library.path"));
-     */ 
-    // System.loadLibrary(LIBRARY_NAME);
-    /*
-     *  String pathSeparator = System.getProperty("path.separator");
-     *  String searchPaths = System.getProperty("java.library.path") + pathSeparator + System.getProperty("java.class.path");
-     *  String[] paths = searchPaths.split(pathSeparator);
-     *  String mPlatformName = System.mapLibraryName(LIBRARY_NAME);
-     *  / get the list of unique directories to check
-     *  for ( int idx = 0; idx < paths.length; idx++ )
-     *  {
-     *  String mPath = paths[idx].toString().trim();
-     *  if ( mPath.startsWith(JAR_RESOURCE) )
-     *  mPath = mPath.substring(JAR_RESOURCE.length());
-     *  else if ( mPath.startsWith(FILE_RESOURCE) )
-     *  mPath = mPath.substring(FILE_RESOURCE.length());
-     *  File mFile = new File(mPath).getAbsoluteFile();
-     *  if ( mFile.isFile() )
-     *  mFile = mFile.getParentFile();
-     *  if ( mFile.exists() && mFile.isDirectory() )
-     *  {
-     *  if ( mPlatformName.indexOf('*') == - 1 )
-     *  mFile = new File(mFile, mPlatformName);
-     *  else
-     *  {
-     *  int mPos = mPlatformName.indexOf('*');
-     *  String mStart = mPlatformName.substring(0, mPos);
-     *  String mEnd = mPlatformName.substring(mPos + 1);
-     *  File mCandidate = null;
-     *  / use wildcard in search
-     *  File mFiles[] = mFile.listFiles();
-     *  for ( int mIdx = 0; mIdx < mFiles.length; mIdx++ )
-     *  if ( mFiles[mIdx].getName().startsWith(mStart) && mFiles[mIdx].getName().endsWith(mEnd) )
-     *  if ( mCandidate == null || mFiles[mIdx].getName().compareTo(mCandidate.getName()) > 0 )
-     *  mCandidate = mFiles[mIdx];
-     *  mFile = mCandidate;
-     *  }
-     *  if ( mFile != null && mFile.exists() && mFile.isFile() )
-     *  {
-     *  try
-     *  {
-     *  /System.err.println("Loading Libary: [" + mFile.getAbsolutePath() + "]");
-     *  System.load(mFile.getAbsolutePath());
-     *  return;
-     *  }
-     *  catch (Throwable t)
-     *  {
-     *  throw new RuntimeException("Native Library " + LIBRARY_NAME + " (" + mFile.getAbsolutePath() + ") could not be loaded. (" + t.getMessage() + ")");
-     *  }
-     *  }
-     *  }
-     *  }
-     *  throw new RuntimeException("Native Library " + LIBRARY_NAME + " (" + mPlatformName + ") could not be found in the library path or class path.");
-     */ 
-    //  }
-
     /**
      *  Description of the Method
      *
@@ -1004,7 +934,6 @@ public class Toolkit {
      */ 
     private static void printStringNoClip(String aText, int aX, int aY,
              int aWidth, int aHeight, CharColor aColor) {
-
         printString(encodeChars(aText), aX, aY, aWidth, aHeight,
                  aColor.getPairNo(), aColor.getAttribute());
 

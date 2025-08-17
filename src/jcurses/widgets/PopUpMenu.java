@@ -5,17 +5,20 @@ import jcurses.event.ItemEvent;
 import jcurses.event.ItemListener;
 
 /**
- * This class implements a popup menu window. Such windows can be used for example to implemene menu bars ( currently not cantained in the library ). A popup
- * menu window gives a user the possibility to select and ivoke an item from a list and is than closed. Separator items can be used as by <code>MenuList</code>
+ * This class implements a popup menu window. Such windows can be used for example to implement menu bars (currently not contained in the library ). A popup
+ * menu window gives a user the possibility to select and invoke an item from a list and is than closed. Separator items can be used as by <code>MenuList</code>
  * described.
  */
 public class PopUpMenu implements WidgetsConstants, ItemListener
 {
-  Dialog           _peer     = null;
-  String           _title    = null;
-  private MenuList _menuList = new MenuList();
-  private int      _x        = 0;
-  private int      _y        = 0;
+
+  private final MenuList _menuList = new MenuList();
+
+  private Dialog _peer = null;
+  private final int _x;
+  private final int _y;
+
+  String _title;
 
   /**
    * The constructor
@@ -32,10 +35,9 @@ public class PopUpMenu implements WidgetsConstants, ItemListener
   }
 
   /**
-   * DOCUMENT ME!
+   * Get item
    * 
-   * @param index DOCUMENT ME!
-   * 
+   * @param index the item position
    * @return the item at the specified position
    */
   public String getItem(int index)
@@ -44,7 +46,7 @@ public class PopUpMenu implements WidgetsConstants, ItemListener
   }
 
   /**
-   * DOCUMENT ME!
+   * Get items count
    * 
    * @return the number of items
    */
@@ -123,7 +125,7 @@ public class PopUpMenu implements WidgetsConstants, ItemListener
   }
 
   /**
-   * Removes the first ocuurence of the specified item
+   * Removes the first occurrence of the specified item
    * 
    * @param item item to be removed
    */

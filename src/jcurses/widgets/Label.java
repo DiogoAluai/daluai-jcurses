@@ -46,7 +46,7 @@ public class Label extends Widget {
 	}
 
 	/**
-	 * The constructor which makes a Lable of a String
+	 * The constructor which makes a Label of a String
 	 *
 	 *
 	 * @param  aLabel  label's text
@@ -64,9 +64,9 @@ public class Label extends Widget {
 		String[] mLines = TextUtils.wrapLines(_label, Integer.MAX_VALUE);
 
 		int mWide = 0;
-		for (int mIdx = 0; mIdx < mLines.length; mIdx++) {
-			mWide = Math.max(mWide, mLines[mIdx].length());
-		}
+        for (String mLine : mLines) {
+            mWide = Math.max(mWide, mLine.length());
+        }
 
 		return new Rectangle(mWide, mLines.length);
 	}

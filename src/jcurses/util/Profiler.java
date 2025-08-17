@@ -2,12 +2,12 @@
 package jcurses.util;
 
 /**
-*  This a library-intern class for performance meausrement.
+*  This a library-intern class for performance measurement.
 *  The class isn't needed to develop jcurses applications  
 */
 public class Profiler {
 	
-	private static long [] marks = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+	private static final long [] marks = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 	
 	public static void setMark(int index) {
 		if ((index < 0)  || (index > 9)) {

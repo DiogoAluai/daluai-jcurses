@@ -17,7 +17,8 @@ public class Panel extends WidgetContainer
   public static final int ALIGNMENT_LEFT   = 0;
   public static final int ALIGNMENT_RIGHT  = 1;
   public static final int ALIGNMENT_CENTER = 2;
-  private Rectangle       _prefSize        = null;
+
+  private final Rectangle _prefSize;
 
   public Panel()
   {
@@ -44,20 +45,9 @@ public class Panel extends WidgetContainer
 
   protected void paintSelf()
   {
-    Toolkit.drawRectangle(getRectangle(), getPanelColors());
+    Toolkit.drawRectangle(getRectangle(), getColors());
   }
 
-  /**
-   * Returns panel colors.
-   * 
-   * @return panel colors
-   * @deprecated Use getColors()
-   *  
-   */
-  public CharColor getPanelColors()
-  {
-    return getColors();
-  }
 
   /**
    * Sets panel colors.

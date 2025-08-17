@@ -4,8 +4,6 @@
  */
 package jcurses.dialogs;
 
-import jcurses.event.ActionEvent;
-import jcurses.event.ActionListener;
 import jcurses.system.Toolkit;
 import jcurses.util.TextUtils;
 import jcurses.widgets.Button;
@@ -37,10 +35,12 @@ public class YesNoDialog {
 	// number of rows needed to account for borders, padding, and buttons
 	private final static int WIDTH_FACTOR = 4;
 	// number of rows needed to account for borders and padding
-	Dialog dialog;
-	boolean result = false;
-	Button mYes;
-	Button mNo;
+
+	private final Dialog dialog;
+	private final Button mYes;
+	private final Button mNo;
+
+	private boolean result;
 
 	/**
 	 *Constructor for the YesNoDialog object with several defaults.
@@ -110,7 +110,7 @@ public class YesNoDialog {
 		int mWidth = Math.max(aYesLabel.length() + aNoLabel.length() + (4 * WIDTH_FACTOR), Math.max(aTitle.length() + 2, 50));
 		mWidth = Math.min(Toolkit.getScreenWidth() - WIDTH_FACTOR, mWidth);
 
-		String mLines[] = TextUtils.wrapLines(aMessage, mWidth);
+		String[] mLines = TextUtils.wrapLines(aMessage, mWidth);
 
 		int mHeight = Math.min(Toolkit.getScreenHeight() - HEIGHT_FACTOR, mLines.length);
 
@@ -130,30 +130,24 @@ public class YesNoDialog {
 		mYes = new Button(aYesLabel);
 		int btnX = btnStep;
 
-		mYes.addListener(
-			new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					result = true;
-					dialog.close();
-				}
-			});
+		mYes.addListener(arg0 -> {
+			result = true;
+			dialog.close();
+		});
 		layout.addWidget(mYes, btnX, btnY, btnWide, 1, WidgetsConstants.ALIGNMENT_CENTER, WidgetsConstants.ALIGNMENT_CENTER);
 
 		btnX = btnWide + (2 * btnStep);
 
 		mNo = new Button(aNoLabel);
-		mNo.addListener(
-			new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					result = false;
-					dialog.close();
-				}
-			});
+		mNo.addListener(arg0 -> {
+			result = false;
+			dialog.close();
+		});
 		layout.addWidget(mNo, btnX, btnY, btnWide, 1, WidgetsConstants.ALIGNMENT_CENTER, WidgetsConstants.ALIGNMENT_CENTER);
 	}
 
 	/**
-	 * Create and run the dlg and get the boolean user response,
+	 * Create and run the dlg and get the boolea user response,
 	 * that which is unspecified is defaulted, mapping this factory
 	 * method to the similar ctor.
 	 *
@@ -168,7 +162,7 @@ public class YesNoDialog {
 	}
 
 	/**
-	 * Create and run the dlg and get the boolean user response,
+	 * Create and run the dlg and get the boolea user response,
 	 * that which is unspecified is defaulted, mapping this factory
 	 * method to the similar ctor.
 	 *
@@ -181,7 +175,7 @@ public class YesNoDialog {
 	}
 
 	/**
-	 * Create and run the dlg and get the boolean user response,
+	 * Create and run the dlg and get the boolea user response,
 	 * that which is unspecified is defaulted, mapping this factory
 	 * method to the similar ctor.
 	 *

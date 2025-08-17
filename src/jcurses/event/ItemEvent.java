@@ -7,17 +7,15 @@ import jcurses.widgets.Widget;
 */
 
 public class ItemEvent extends Event {
-	
-	private int _id=0;
-	private Object _item = null; 
-	private int _type = 0;
-	
-	
+
 	public static final int SELECTED = 0;
 	public static final int DESELECTED = 1;
 	public static final int CALLED = 2;
-	
-	
+
+	private final int _id;
+	private final Object _item;
+	private final int _type;
+
     /**
     *  The constructor
     * 
@@ -25,10 +23,10 @@ public class ItemEvent extends Event {
     * @param id the id of the affected item
     * @param item the content of the affected item, in order this is a string.
     * @param type the type of the event, must be equal to one of following three constants:
-    *       <br><code>SELECTED<code> - the event signals, that an item is selected by the user
-    *       <br><code>DESELECTED<code> - the event signals, that an item is deselected by the user
-    *       <br><code>CALLED<code> - the event signals, that an item is 'called' by the user, this is
-    *       in order activated with the cursor an pushed 'enter' key
+    *       <br><code>SELECTED</code> - the event signals, that an item is selected by the user
+    *       <br><code>DESELECTED</code> - the event signals, that an item is deselected by the user
+    *       <br><code>CALLED</code> - the event signals, that an item is 'called' by the user, this is
+    *       in order activated with the cursor a pushed 'enter' key
     */
 	public ItemEvent(Widget source, int id, Object item, int type) {
 		super(source);

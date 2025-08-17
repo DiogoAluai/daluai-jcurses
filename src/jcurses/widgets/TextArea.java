@@ -7,18 +7,19 @@ import jcurses.themes.Theme;
 import jcurses.util.Rectangle;
 
 /**
- * This class implements a text area to edit a text with meny lines
+ * This class implements a text area to edit a text with many lines
  */
 public class TextArea extends TextComponent implements IScrollable
 {
-  private ScrollbarPainter _scrollbars              = null;
+  private final ScrollbarPainter _scrollbars;
 
   /**
    * The constructor
    * 
-   * @param width the preferred width of the component. If -1 is stated, there is no preferred width and the component is layouted dependend on the container
-   *          and the text
-   * @param height the preferred height of the component. If -1 is stated, there is no preferred width and the component is layouted dependend on the container.
+   * @param width the preferred width of the component. If -1 is stated, there is no preferred width and the component
+   *              layout depends on the container and the text
+   * @param height the preferred height of the component. If -1 is stated, there is no preferred width and the component
+   *              layout depends on the container
    * @param text the initial text, if <code>null</code> the component is empty
    */
   public TextArea(int width, int height, String text)
@@ -30,9 +31,10 @@ public class TextArea extends TextComponent implements IScrollable
   /**
    * The constructor
    * 
-   * @param width the preferred width of the component. If -1 is stated, there is no preferred width and the component is layouted dependend on the container
-   *          and the text
-   * @param height the preferred height of the component. If -1 is stated, there is no preferred width and the component is layouted dependend on the container.
+   * @param width the preferred width of the component. If -1 is stated, there is no preferred width and the component
+   *              layout depends on the container and the text
+   * @param height the preferred height of the component. If -1 is stated, there is no preferred width and the component
+   *              layout depends on the container
    */
   public TextArea(int width, int height)
   {

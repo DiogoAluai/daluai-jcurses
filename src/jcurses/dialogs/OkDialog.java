@@ -3,8 +3,6 @@
  */
 package jcurses.dialogs;
 
-import jcurses.event.ActionEvent;
-import jcurses.event.ActionListener;
 import jcurses.system.Toolkit;
 import jcurses.util.TextUtils;
 import jcurses.widgets.Button;
@@ -56,7 +54,7 @@ public class OkDialog {
 	 */
 	public OkDialog(String aTitle, String aMessage, String aLabel) {
 		int mWidth = Math.min(Toolkit.getScreenWidth() - WIDTH_FACTOR, Math.max(aTitle.length() + 2, 40));
-		String mLines[] = TextUtils.wrapLines(aMessage, mWidth);
+		String[] mLines = TextUtils.wrapLines(aMessage, mWidth);
 		int mHeight = Math.min(Toolkit.getScreenHeight() - HEIGHT_FACTOR, mLines.length);
 
 		dialog = new Dialog(mWidth + WIDTH_FACTOR, mHeight + HEIGHT_FACTOR, true, aTitle);
@@ -65,12 +63,7 @@ public class OkDialog {
 		dialog.getRootPanel().setLayoutManager(layout);
 
 		Button mYes = new Button(aLabel);
-		mYes.addListener(
-			new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dialog.close();
-				}
-			});
+		mYes.addListener(arg0 -> dialog.close());
 
 		int btnX = (mWidth - aLabel.length() - WIDTH_PADDING) / 2;
 		int btnY = mHeight + HEIGHT_FACTOR / 2;

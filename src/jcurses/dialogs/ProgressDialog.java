@@ -1,7 +1,6 @@
 
 package jcurses.dialogs;
 
-import jcurses.event.ActionEvent;
 import jcurses.event.ActionListener;
 import jcurses.system.Toolkit;
 import jcurses.widgets.Button;
@@ -152,12 +151,7 @@ public class ProgressDialog {
 
 		if (doCancel != null) {
 			Button mCancel = new Button(DEFAULT_LABEL);
-			mCancel.addListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						doCancel.actionPerformed(arg0);
-					}
-				});
+			mCancel.addListener(arg0 -> doCancel.actionPerformed(arg0));
 
 			int btnX = (width - DEFAULT_LABEL.length() - WIDTH_PADDING) / 2;
 			int btnY = height + (HEIGHT_FACTOR / 2);

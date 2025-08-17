@@ -4,15 +4,19 @@ package jcurses.event;
 import java.util.Vector;
 
 /**
- * This class is the basic class for listener manager. Listener manager are used in widgets classes to manage listeners on widgets's events. This can be also
- * implemented without an listener manager, but these make it easier.
+ * This class is the basic class for listener manager. Listener manager are used in widgets classes to manage listeners on widgets' events. This can be also
+ * implemented without a listener manager, but these make it easier.
  * 
  * @author Alexei Chmelev
  */
 public abstract class ListenerManager
 {
 
-  private Vector _listeners = new Vector();
+  private final Vector _listeners;
+
+  public ListenerManager() {
+    this._listeners = new Vector();
+  }
 
   /**
    * The method adds a listener to the list of managed listeners.
@@ -36,7 +40,7 @@ public abstract class ListenerManager
   }
 
   /**
-   * The method handles an occured event. This method is called in a widget if an event is occured and has to be delegated to listeners.
+   * The method handles an occurred event. This method is called in a widget if an event is occurred and has to be delegated to listeners.
    * 
    * @param event event to be handled
    */
@@ -50,8 +54,8 @@ public abstract class ListenerManager
   }
 
   /**
-   * The method is called by <code>handleElent<code> for each registered listener.
-   * In order this method has to call an method of the listener object with handled event as parameter
+   * The method is called by <code>handleEvent</code> for each registered listener.
+   * In order this method has to call a method of the listener object with handled event as parameter
    * 
    * @param event event to be handled
    * @param listener listener to handle
@@ -59,7 +63,7 @@ public abstract class ListenerManager
   protected abstract void doHandleEvent(Event event, Object listener);
 
   /**
-   * The method verifies an listener object to be of the right type for this listener manager
+   * The method verifies a listener object to be of the right type for this listener manager
    * 
    * @param listener listener to be verified
    */

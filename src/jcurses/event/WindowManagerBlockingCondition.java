@@ -2,7 +2,7 @@
 package jcurses.event;
 
 /**
- *  An interface specifying a method the MindowManager uses
+ *  An interface specifying a method the WindowManager uses
  * to check if Dialogs are ready to be modal.
  * 
  *

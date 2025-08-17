@@ -1,11 +1,6 @@
 
 package jcurses.widgets;
 
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Vector;
-
 import jcurses.event.WindowEvent;
 import jcurses.event.WindowListener;
 import jcurses.event.WindowListenerManager;
@@ -16,23 +11,17 @@ import jcurses.themes.Theme;
 import jcurses.themes.WindowThemeOverride;
 import jcurses.util.Rectangle;
 
+import java.util.Comparator;
+import java.util.Hashtable;
+import java.util.Vector;
+
 /**
  * Under jCurses, unlike some GUI libraries, a Window is not a widget, but contains a panel (the root panel), that contains all widgets. A window can, but
- * doesn't must, have a border and a title. All windows under jcurses are managed in a stack, the topmost visible window window on the stack gets all input
- * chars for handling, this is so called focus window. If a window is created, it goes automatically to the top of the stack and lives there until another
+ * doesn't must, have a border and a title. All windows under jcurses are managed in a stack, the topmost visible window on the stack gets all input
+ * chars for handling, this is so-called focus window. If a window is created, it goes automatically to the top of the stack and lives there until another
  * window is created or explicitly brought to the top.
  */
 public class Window {
-	private static InputChar __defaultClosingChar = new InputChar(InputChar.KEY_ESC);
-	private static InputChar __defaultFocusChangeChar = new InputChar(InputChar.KEY_TAB);
-	private static InputChar __upChar = new InputChar(InputChar.KEY_UP);
-	private static InputChar __downChar = new InputChar(InputChar.KEY_DOWN);
-	private static InputChar __leftChar = new InputChar(InputChar.KEY_LEFT);
-	private static InputChar __rightChar = new InputChar(InputChar.KEY_RIGHT);
-	private InputChar _closingChar = getDefaultClosingChar();
-	private InputChar _focusChangeChar = getDefaultFocusChangeChar();
-	private Hashtable _shortCutsTable = new Hashtable();
-	private Vector _shortCutsList = new Vector();
 
 	/**
 	 *  Self-documenting
@@ -51,22 +40,28 @@ public class Window {
 	 */
 	public final static int DIR_DOWN = 3;
 
-	/*
-	 *  can this can be private?
-	 */
-	boolean _closed = false;
-	/*
-	 *  can this can be private?
-	 */
-	Theme _theme = new WindowThemeOverride();
+	private static final InputChar __defaultClosingChar = new InputChar(InputChar.KEY_ESC);
+	private static final InputChar __defaultFocusChangeChar = new InputChar(InputChar.KEY_TAB);
+	private static final InputChar __upChar = new InputChar(InputChar.KEY_UP);
+	private static final InputChar __downChar = new InputChar(InputChar.KEY_DOWN);
+	private static final InputChar __leftChar = new InputChar(InputChar.KEY_LEFT);
+	private static final InputChar __rightChar = new InputChar(InputChar.KEY_RIGHT);
 
-	private Panel _root = null;
-	private Rectangle _rect = null;
-	private String _title = null;
+	private final Hashtable _shortCutsTable = new Hashtable();
+	private final Vector _shortCutsList = new Vector();
+	private final Theme _theme = new WindowThemeOverride();
+	private final WindowListenerManager _listenerManager = new WindowListenerManager();
+
+	private InputChar _closingChar = getDefaultClosingChar();
+	private InputChar _focusChangeChar = getDefaultFocusChangeChar();
+
+	private boolean _closed = false;
+
+	private Panel _root;
+	private final Rectangle _rect;
+	private String _title;
 	private Vector _focusableChildren = null;
 
-	//Listener-Zeugs
-	private WindowListenerManager _listenerManager = new WindowListenerManager();
 	private boolean _border = false;
 	private boolean _hasShadow = true;
 	private boolean _visible = false;
@@ -75,7 +70,7 @@ public class Window {
 	/**
 	 * The constructor
 	 *
-	 * @param  x       the the top left corner's x coordinate
+	 * @param  x       the top left corner's x coordinate
 	 * @param  y       the top left corner's y coordinate
 	 * @param  width   window's width
 	 * @param  height  window's height
@@ -198,9 +193,9 @@ public class Window {
 	}
 
 	/**
-	 * The method defined the charater used to navigate (change the focus) between widgets within the window. Default is 'tab'
+	 * The method defined the character used to navigate (change the focus) between widgets within the window. Default is 'tab'
 	 *
-	 * @param  character  new window's focus changing charater
+	 * @param  character  new window's focus changing character
 	 */
 	public void setFocusChangeChar(InputChar character) {
 		_focusChangeChar = character;
@@ -209,7 +204,7 @@ public class Window {
 	/**
 	 * The method returns the character used to navigate (change the focus) between widgets within the window. Default is 'tab'
 	 *
-	 * @return    window's focus changing charater
+	 * @return    window's focus changing character
 	 */
 	public InputChar getFocusChangeChar() {
 		return _focusChangeChar;
@@ -241,7 +236,6 @@ public class Window {
 	 * @return    the root panel of the window
 	 */
 	public Panel getRootPanel() {
-		//Ein kommentar
 		return _root;
 	}
 
@@ -342,14 +336,14 @@ public class Window {
 	}
 
 	/**
-	 * The method computes new window's layout. The method must already be called, if anything on the window building is changed, for example, an widget is
+	 * The method computes new window's layout. The method must already be called, if anything on the window building is changed, for example, a widget is
 	 * removed or isn't more focusable ( because not visible or other ).
 	 */
 	public void pack() {
 		cutIfNeeded();
 		configureRootPanel();
 		_root.pack();
-		loadFocusableChilds();
+		loadFocusableChildren();
 		loadShortcuts();
 	}
 
@@ -375,9 +369,9 @@ public class Window {
 	}
 
 	/**
-	 * The method tries to close the window, after the user has typed 'escape' or an other closing character. The procedure is as following: If the window has
-	 * listeners, than an event is sent to the listeners. The window can be closed bei listeners. Didn't listeners close the window, in leaves open. Has the
-	 * window no listeners, than the method closes it.
+	 * The method tries to close the window, after the user has typed 'escape' or another closing character. The procedure is as following: If the window has
+	 * listeners, then an event is sent to the listeners. The window can be closed bei listeners. Didn't listeners close the window, in leaves open. Has the
+	 * window no listeners, then the method closes it.
 	 *
 	 * @return    true if close was successful
 	 */
@@ -446,7 +440,7 @@ public class Window {
 	 *  Changes the focus between widgets and propagates the change notification.
 	 *  Internal only, should not be called by application code. 
 	 *
-	 * @param  aWidget  the Widge itself to which the focus is to be changed.
+	 * @param  aWidget  the Widget itself to which the focus is to be changed.
 	 */
 	protected void changeFocus(Widget aWidget) {
 		changeFocus(_focusableChildren.indexOf(aWidget));
@@ -486,59 +480,59 @@ public class Window {
 
 		Widget mResult = mCurrent;
 
-		for (Iterator mIt = _focusableChildren.iterator(); mIt.hasNext(); ) {
-			Widget mCandidate = (Widget) mIt.next();
+        for (Object focusableChild : _focusableChildren) {
+            Widget mCandidate = (Widget) focusableChild;
 
-			if (mCandidate == mCurrent) {
-				continue;
-			}
+            if (mCandidate == mCurrent) {
+                continue;
+            }
 
-			Rectangle mCurRect = mCurrent.getRectangle();
-			Rectangle mCandRect = mCandidate.getRectangle();
-			Rectangle mResRect = mResult.getRectangle();
+            Rectangle mCurRect = mCurrent.getRectangle();
+            Rectangle mCandRect = mCandidate.getRectangle();
+            Rectangle mResRect = mResult.getRectangle();
 
-			int vDelta = mCurRect.verticalDistanceFrom(mCandRect) - mCurRect.verticalDistanceFrom(mResRect);
-			int hDelta = mCurRect.horizontalDistanceFrom(mCandRect) - mCurRect.horizontalDistanceFrom(mResRect);
+            int vDelta = mCurRect.verticalDistanceFrom(mCandRect) - mCurRect.verticalDistanceFrom(mResRect);
+            int hDelta = mCurRect.horizontalDistanceFrom(mCandRect) - mCurRect.horizontalDistanceFrom(mResRect);
 
-			switch (aDirection) {
-							case DIR_LEFT:
+            switch (aDirection) {
+                case DIR_LEFT:
 
-								if (mCandRect.isLeftOf(mCurRect)) {
-									if ((mResult == mCurrent) || (vDelta < 0) || ((vDelta == 0) && (hDelta < 0))) {
-										mResult = mCandidate;
-									}
-								}
+                    if (mCandRect.isLeftOf(mCurRect)) {
+                        if ((mResult == mCurrent) || (vDelta < 0) || ((vDelta == 0) && (hDelta < 0))) {
+                            mResult = mCandidate;
+                        }
+                    }
 
-								break;
-							case DIR_RIGHT:
+                    break;
+                case DIR_RIGHT:
 
-								if (mCandRect.isRightOf(mCurRect)) {
-									if ((mResult == mCurrent) || (vDelta < 0) || ((vDelta == 0) && (hDelta < 0))) {
-										mResult = mCandidate;
-									}
-								}
+                    if (mCandRect.isRightOf(mCurRect)) {
+                        if ((mResult == mCurrent) || (vDelta < 0) || ((vDelta == 0) && (hDelta < 0))) {
+                            mResult = mCandidate;
+                        }
+                    }
 
-								break;
-							case DIR_UP:
+                    break;
+                case DIR_UP:
 
-								if (mCandRect.isAbove(mCurRect)) {
-									if ((mResult == mCurrent) || (hDelta < 0) || ((hDelta == 0) && (vDelta < 0))) {
-										mResult = mCandidate;
-									}
-								}
+                    if (mCandRect.isAbove(mCurRect)) {
+                        if ((mResult == mCurrent) || (hDelta < 0) || ((hDelta == 0) && (vDelta < 0))) {
+                            mResult = mCandidate;
+                        }
+                    }
 
-								break;
-							case DIR_DOWN:
+                    break;
+                case DIR_DOWN:
 
-								if (mCandRect.isBelow(mCurRect)) {
-									if ((mResult == mCurrent) || (hDelta < 0) || ((hDelta == 0) && (vDelta < 0))) {
-										mResult = mCandidate;
-									}
-								}
+                    if (mCandRect.isBelow(mCurRect)) {
+                        if ((mResult == mCurrent) || (hDelta < 0) || ((hDelta == 0) && (vDelta < 0))) {
+                            mResult = mCandidate;
+                        }
+                    }
 
-								break;
-			}
-		}
+                    break;
+            }
+        }
 
 		changeFocus(mResult);
 	}
@@ -565,8 +559,6 @@ public class Window {
 	 */
 	protected void handleInput(InputChar inp) {
 		Widget cur = getCurrentWidget();
-
-		//System.err.println("Window.handleInput( 0x"+Integer.toHexString(inp.getCode())+" )");
 
 		if ((cur != null) && cur.handleInput(inp)) {
 			return;
@@ -620,8 +612,8 @@ public class Window {
 	/**
 	 *  Resize to specified size 
 	 *
-	 * @param  width   d'oh
-	 * @param  height  d'oh
+	 * @param  width   width
+	 * @param  height  height
 	 */
 	protected void resize(int width, int height) {
 		_rect.setWidth(width);
@@ -678,18 +670,18 @@ public class Window {
 	 * <li>Some other defined shortcut key was entered</li>
 	 * <li>Handling input from a child that has the focus</li>
 	 * </ol>
-	 * Behandlung der Eingabe. <br>
-	 * Vier m?gliche F?lle: <br>
-	 * 1. Fenster schliessen. <br>
-	 * 2. Zum n?chsten Widget springen. <br>
-	 * 3. Shortcut bearbeiten. <br>
-	 * 3. Eingabe vom aktuell Fokus habenden Kind bearbeiten lassen.
+	 * Handling of the input. <br>
+	 * Four possible cases: <br>
+	 * 1. Close window. <br>
+	 * 2. Jump to the next widget. <br>
+	 * 3. Process shortcut. <br>
+	 * 4. Let the child that currently has focus handle the input.
 	 *
 	 * @param  inp  object instance representing the input char
 	 * @return      true if this char is to be handled as a shortcut
 	 */
 	private boolean isShortCut(InputChar inp) {
-		return (_shortCutsList.indexOf(inp) != -1);
+		return (_shortCutsList.contains(inp));
 	}
 
 	/**
@@ -757,7 +749,7 @@ public class Window {
 	/**
 	 *  Load and show in order (i.e., changing focus) each of the window's focusable children.
 	 */
-	private void loadFocusableChilds() {
+	private void loadFocusableChildren() {
 		_focusableChildren = _root.getListOfFocusables();
 		if (!isFocusableIndex(_currentIndex)) {
 			changeFocus();

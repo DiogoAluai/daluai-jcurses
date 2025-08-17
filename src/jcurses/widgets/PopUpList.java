@@ -14,37 +14,18 @@ import jcurses.util.Rectangle;
 import java.util.Vector;
 
 /**
- * This class implements a popup list. Such list has always one of the items selected and gives the possibility to change this selection ( througth an popup
+ * This class implements a popup list. Such list has always one of the items selected and gives the possibility to change this selection (through a popup
  * menu that is shown, if the user typed 'enter')
  */
 public class PopUpList extends Widget
 {
-  Vector                              _items            = new Vector();
-  private static InputChar            __changeValueChar = new InputChar('\n');
-  private ValueChangedListenerManager _listenerManager  = new ValueChangedListenerManager();
-  private int                         _selectedIndex    = - 1;
 
-  /**
-   * Sets colors used to paint the widget, if it has focus
-   * 
-   * @param aColors colors used to paint the widget, if it has focus
-   * @deprecated Use setSelectedColors()
-   */
-  public void setFocusedPopUpColors(CharColor aColors)
-  {
-    setSelectedColors(aColors);
-  }
+  private static final InputChar __changeValueChar = new InputChar('\n');
 
-  /**
-   * The the colors used to paint the widget if it has focus.
-   * 
-   * @return focus widget colors
-   * @deprecated Use getSelectedColors()
-   */
-  public CharColor getFocusedPopUpColors()
-  {
-    return getSelectedColors();
-  }
+  private final Vector _items = new Vector();
+  private final ValueChangedListenerManager _listenerManager = new ValueChangedListenerManager();
+
+  private int _selectedIndex = - 1;
 
   /**
    * Sets the currently selected index
@@ -76,7 +57,7 @@ public class PopUpList extends Widget
       return _selectedIndex;
     }
 
-    if ( _items.size() > 0 )
+    if (!_items.isEmpty())
     {
       return 0;
     }
@@ -149,7 +130,7 @@ public class PopUpList extends Widget
   }
 
   /**
-   * Removes the first ocuurence of the specified item
+   * Removes the first occurrence of the specified item
    * 
    * @param item item to be removed
    */
@@ -194,7 +175,7 @@ public class PopUpList extends Widget
     rect.setLocation(getAbsoluteX(), getAbsoluteY());
 
     String text = "[" + getText() + "]";
-    CharColor colors = hasFocus() ? getFocusedPopUpColors() : getColors();
+    CharColor colors = hasFocus() ? getSelectedColors() : getColors();
     Toolkit.printString(text, rect, colors);
   }
 
@@ -260,7 +241,7 @@ public class PopUpList extends Widget
 
   private String getText()
   {
-    String result = null;
+    String result;
     int length = getSize().getWidth() - 2;
     String item = ( getSelectedItem() == null ) ? "" : getSelectedItem();
 
@@ -270,7 +251,7 @@ public class PopUpList extends Widget
     }
     else
     {
-      StringBuffer buf = new StringBuffer();
+      StringBuilder buf = new StringBuilder();
       buf.append(item);
 
       for ( int i = 0; i < ( length - item.length() ); i++ )

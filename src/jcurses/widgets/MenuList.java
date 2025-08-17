@@ -5,12 +5,16 @@ import jcurses.system.InputChar;
 
 import jcurses.util.Rectangle;
 
+import java.util.Objects;
+
 /**
  *   A visual list that handles user selection events
  */
 public class MenuList extends List {
+
 	private final static String SEPARATOR = "\u0000\u0000\u0000\u0000";
 	private final static String SEPARATOR_STRING = "";
+
 	private String _separatorString = SEPARATOR_STRING;
 
 	/**
@@ -60,7 +64,7 @@ public class MenuList extends List {
 	 * @return       The itemRepresentation value
 	 */
 	protected String getItemRepresentation(String item) {
-		if (item == SEPARATOR) {
+		if (Objects.equals(item, SEPARATOR)) {
 			return getSeparatorString();
 		}
 
@@ -83,7 +87,7 @@ public class MenuList extends List {
 	 * @return        The selectable value
 	 */
 	protected boolean isSelectable(int index) {
-		return (!(getItem(index) == SEPARATOR));
+		return (!(Objects.equals(getItem(index), SEPARATOR)));
 	}
 
 	/**
@@ -110,7 +114,7 @@ public class MenuList extends List {
 
 		for (int i = 0; i < getItemsCount(); i++) {
 			int length = getItemRepresentation((getItem(i))).length();
-			result = (length > result) ? length : result;
+			result = Math.max(length, result);
 		}
 
 		return result;

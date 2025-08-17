@@ -42,14 +42,6 @@ public class Test extends Window implements ItemListener, ActionListener, ValueC
 
     BorderPanel bp = new BorderPanel();
 
-    //_c1   = new CheckBox();
-
-    //_c2   = new CheckBox(true);
-
-    //_l1   = new Label("textfeld");
-
-    //_l2   = new Label("checkbox2");
-
     _b1 = new Button("OK");
 
     _b1.setShortCut('o');
@@ -88,7 +80,6 @@ public class Test extends Window implements ItemListener, ActionListener, ValueC
 
     bp.setLayoutManager(manager);
 
-    //manager.addWidget(_l1,0,0,1,2,ALIGNMENT_CENTER, ALIGNMENT_CENTER);
     manager.addWidget(_list, 0, 0, 1, 4, ALIGNMENT_TOP, ALIGNMENT_CENTER);
 
     manager.addWidget(_textArea, 1, 0, 1, 2, ALIGNMENT_CENTER, ALIGNMENT_CENTER);
@@ -102,22 +93,14 @@ public class Test extends Window implements ItemListener, ActionListener, ValueC
 
   public static void main(String[] args) throws Exception
   {
-    //Protocol initialisieren
+    //Protocol initialization
     System.setProperty("jcurses.protocol.filename", "jcurses.log");
 
     Protocol.activateChannel(Protocol.DEBUG);
 
     Protocol.debug("Programm beginnt");
 
-    /*FileOutputStream stream = new FileOutputStream("test.txt");
 
-    OutputStreamWriter writer = new OutputStreamWriter(stream,"Cp850");
-
-    writer.write("W?hlen");
-
-    writer.flush();
-
-    writer.close();*/
     Toolkit.beep();
 
     Window test = new Test(28, 20);
@@ -125,8 +108,6 @@ public class Test extends Window implements ItemListener, ActionListener, ValueC
     test.addListener((WindowListener) test);
 
     test.show();
-
-    //Toolkit.clearScreen(new CharColor(CharColor.BLUE, CharColor.BLUE, CharColor.REVERSE));
   }
 
   public void actionPerformed(ActionEvent event)
@@ -174,8 +155,6 @@ public class Test extends Window implements ItemListener, ActionListener, ValueC
 
       new Message("meldung", menu.getSelectedItem() + ":" + menu.getSelectedIndex(), "OK").show();
     }
-
-    //close();
   }
 
   public void stateChanged(ItemEvent e)

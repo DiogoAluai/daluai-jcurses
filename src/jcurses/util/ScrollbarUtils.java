@@ -19,8 +19,8 @@ public class ScrollbarUtils
   /**
    * The method to paint a scrollbar.
    * 
-   * @param start the start coordinate of the scrollbar (x or y dependend of <code>alignment</code>
-   * @param end the end coordinate of the scrollbar (x or y dependend of <code>alignment</code>
+   * @param start the start coordinate of the scrollbar (x or y depending on <code>alignment</code>
+   * @param end the end coordinate of the scrollbar (x or y depending on <code>alignment</code>
    * @param cst the width (height) of the scrollbars line
    * @param firstPart the part of the scrollbar before the beam ( 0=> <1)
    * @param lastPart the part of the scrollbar after the beam ( 0=> <1)
@@ -30,7 +30,7 @@ public class ScrollbarUtils
   {
     if ( ( firstPart == 0 ) && ( lastPart == 0 ) )
     {
-      //kein scrollbar, wenn alles sichtbar
+      // no scrollbar when everything is visible
       return;
     }
     int length = end - start + 1;
@@ -39,25 +39,25 @@ public class ScrollbarUtils
 
     barLength = ( barLength == 0 ) ? 1 : barLength;
 
-    int firstIntervall = Math.round(( firstPart * length ));
+    int firstInterval = Math.round(( firstPart * length ));
 
-    while ( ( barLength + firstIntervall ) > ( length ) )
+    while ( ( barLength + firstInterval ) > ( length ) )
     {
-      firstIntervall--;
+      firstInterval--;
     }
 
     if ( lastPart == 0 )
     {
-      firstIntervall = ( length - barLength );
+      firstInterval = ( length - barLength );
     }
 
     if ( alignment == HORIZONTAL )
     {
-      Toolkit.drawHorizontalThickLine(start + firstIntervall, cst, start + firstIntervall + barLength - 1, __color);
+      Toolkit.drawHorizontalThickLine(start + firstInterval, cst, start + firstInterval + barLength - 1, __color);
     }
     else
     {
-      Toolkit.drawVerticalThickLine(cst, start + firstIntervall, start + firstIntervall + barLength - 1, __color);
+      Toolkit.drawVerticalThickLine(cst, start + firstInterval, start + firstInterval + barLength - 1, __color);
     }
 
   }

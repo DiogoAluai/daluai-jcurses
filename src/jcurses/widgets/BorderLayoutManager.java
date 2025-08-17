@@ -34,11 +34,11 @@ public class BorderLayoutManager implements LayoutManager
   private WidgetContainer mFather = null;
 
   /** Stores constraints for each of the 5 possible positions. Any entry may be null */
-  private BorderLayoutConstraint mSlots[] = new BorderLayoutConstraint[5];
+  private final BorderLayoutConstraint[] mSlots = new BorderLayoutConstraint[5];
 
   /** Stores separator positions for each dimension */
-  private int mXSep[] = new int[2];
-  private int mYSep[] = new int[2];
+  private final int[] mXSep = new int[2];
+  private final int[] mYSep = new int[2];
 
   /**
    * Adds a widget to the bounded container
@@ -125,8 +125,8 @@ public class BorderLayoutManager implements LayoutManager
     int prefHeight     = prefSize.getHeight();
     int maxWidth       = rect.getWidth(); // Cell width
     int maxHeight      = rect.getHeight(); // Cell height
-    int x              = 0; // Cell x offset
-    int y              = 0; // Cell y offset
+    int x; // Cell x offset
+    int y; // Cell y offset
 
     switch(cstr.mPosition)
     {
@@ -173,12 +173,8 @@ public class BorderLayoutManager implements LayoutManager
     if(prefHeight <= 0)
       prefHeight = maxHeight;
 
-    /*
-    Protocol.debug("Widget prelayout for cell " + cstr.mPosition + " is offset(" + x + "," + y + ")" +
-                       " maxsize(" + maxWidth + "," + maxHeight + ")");
-    */
-    int width  = 0;
-    int height = 0;
+    int width;
+    int height;
 
     if(prefWidth < maxWidth)
     {
@@ -202,10 +198,6 @@ public class BorderLayoutManager implements LayoutManager
       height = maxHeight;
     }
 
-    /*
-    Protocol.debug("Widget layout for cell " + cstr.mPosition + " is offset(" + widget.getX() + "," + widget.getY() + ")" +
-                       " maxsize(" + width + "," + height + ")");
-    */
     widget.setSize(new Rectangle(width, height));
   }
 
@@ -239,7 +231,6 @@ public class BorderLayoutManager implements LayoutManager
 
   /**
    *  Determine separator positions, where top left is 0,0
-   *
    *    mXSep[0]
    *    |
    *  +-+-----+
@@ -266,7 +257,7 @@ public class BorderLayoutManager implements LayoutManager
    * Some super logic for how to partition the dimension based on the
    * number of components and their preferences
    */
-  private void updateSeparatorsDimension(int sep[], BorderLayoutConstraint w1, BorderLayoutConstraint w2, BorderLayoutConstraint w3, int max, boolean width)
+  private void updateSeparatorsDimension(int[] sep, BorderLayoutConstraint w1, BorderLayoutConstraint w2, BorderLayoutConstraint w3, int max, boolean width)
   {
     sep[0]   = 0;
     sep[1]   = max;

@@ -6,11 +6,11 @@ package jcurses.event;
 public interface ValueChangedListener {
 	
     /**
-    *  The method will be called by an widget, generating <code>ValueChangedEvent</code> instances,
+    *  The method will be called by a widget, generating <code>ValueChangedEvent</code> instances,
     * if the listener has been registered by it.
     * 
-    * @param event the event occured
+    * @param event the event occurred
     */
-	public abstract void valueChanged(ValueChangedEvent event);
+	void valueChanged(ValueChangedEvent event);
 
 }

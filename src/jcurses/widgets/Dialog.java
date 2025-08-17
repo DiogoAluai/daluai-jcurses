@@ -6,7 +6,7 @@ import jcurses.event.WindowListener;
 import jcurses.event.WindowManagerBlockingCondition;
 
 /**
- * This class implements a modal dialog. The diffirence to a normal window is, that a call oft the 'show' - method blocks, until the dialog window is closed.
+ * This class implements a modal dialog. The difference to a normal window is, that a call oft the 'show' - method blocks, until the dialog window is closed.
  */
 public class Dialog extends Window implements WindowListener, WindowManagerBlockingCondition
 {

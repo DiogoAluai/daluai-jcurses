@@ -36,7 +36,7 @@ public class PasswordField extends TextField
   protected String replaceTextLineForPrinting(String line)
   {
     int length = line.length();
-    StringBuffer buf = new StringBuffer(length);
+    StringBuilder buf = new StringBuilder(length);
     for ( int i = 0; i < length; i++ )
     {
       buf.append('*');

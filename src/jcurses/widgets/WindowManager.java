@@ -2,8 +2,6 @@
 
 package jcurses.widgets;
 
-import java.util.Vector;
-
 import jcurses.event.WindowManagerBlockingCondition;
 import jcurses.system.InputChar;
 import jcurses.system.Toolkit;
@@ -11,24 +9,28 @@ import jcurses.themes.DefaultThemeImpl;
 import jcurses.themes.Theme;
 import jcurses.util.Rectangle;
 
+import java.util.Vector;
+
 /**
  * This class is a jcurses-internal class, whose task is to manage jcurses text based windows. It shouldn't be used writing applications.
  */
 class WindowManager
 {
+
+  private static final WindowManagerInputThread _inThread = new WindowManagerInputThread();
+
   private static Vector                   __windowsStack     = null;
   private static Window                   __topVisibleWindow = null;
-  private static WindowManagerInputThread _inthread          = new WindowManagerInputThread();
   private static Theme                    _theme             = new DefaultThemeImpl();
 
   public static boolean isInputThread()
   {
-    return _inthread.isCurrentThread();
+    return _inThread.isCurrentThread();
   }
 
   public static void blockInputThread(WindowManagerBlockingCondition cond)
   {
-    _inthread.block(cond);
+    _inThread.block(cond);
   }
 
   public static synchronized void closeAll()
@@ -75,8 +77,6 @@ class WindowManager
 
   protected static synchronized void handleInput(InputChar input)
   {
-    //Toolkit.startPainting();
-
     if ( __topVisibleWindow != null )
     {
       try
@@ -85,14 +85,9 @@ class WindowManager
       }
       catch (Throwable e)
       {
-        //Toolkit.shutdown();
         e.printStackTrace();
-        //System.exit(1);
       }
     }
-
-    //if ( _inthread.isRunning() )
-    //  Toolkit.endPainting();
   }
 
   protected static void doWindowVisibilityChange(Window aWindow)
@@ -145,7 +140,7 @@ class WindowManager
 
   private static synchronized void deactivateInputThread()
   {
-    _inthread.deactivate();
+    _inThread.deactivate();
   }
 
   private static void repaintWindows(Rectangle aClip)
@@ -185,12 +180,12 @@ class WindowManager
 
   private static synchronized void startInputThread()
   {
-    _inthread.start();
+    _inThread.start();
   }
 
   private static synchronized void stopInputThread()
   {
-    _inthread.end();
+    _inThread.end();
   }
 
   public static Theme getTheme()

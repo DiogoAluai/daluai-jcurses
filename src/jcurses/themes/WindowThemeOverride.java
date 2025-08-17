@@ -15,11 +15,13 @@ import jcurses.widgets.Window;
  */
 public class WindowThemeOverride extends BaseTheme
 {
-  Theme baseTheme = null;
+
+  private Theme baseTheme = null;
 
   public WindowThemeOverride()
   {
-  // need zero arg contructor
+    // need zero arg constructor
+    // reason: unknown
   }
 
   public WindowThemeOverride(Theme aBaseTheme)

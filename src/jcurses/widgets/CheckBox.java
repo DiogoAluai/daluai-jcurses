@@ -15,9 +15,10 @@ import jcurses.util.Rectangle;
  */
 public class CheckBox extends Widget
 {
-  private static InputChar            __changeStatusChar = new InputChar(' ');
-  private boolean                     _checked           = false;
-  private ValueChangedListenerManager _listenerManager   = new ValueChangedListenerManager();
+  private static final InputChar __changeStatusChar = new InputChar(' ');
+  private final ValueChangedListenerManager _listenerManager = new ValueChangedListenerManager();
+
+  private boolean _checked;
 
   /**
    * @deprecated Use getDefaultSelectedColors()
@@ -25,15 +26,6 @@ public class CheckBox extends Widget
   public CharColor getFocusedCheckboxDefaultColors()
   {
     return getDefaultSelectedColors();
-  }
-
-  /**
-   * @deprecated Use getSelectedColors()
-   * @return checkboxes colors, if it is focused
-   */
-  public CharColor getFocusedCheckboxColors()
-  {
-    return getSelectedColors();
   }
 
   /**
@@ -120,7 +112,7 @@ public class CheckBox extends Widget
     Rectangle rect = (Rectangle)getSize().clone();
     rect.setLocation(getAbsoluteX(), getAbsoluteY());
     String text = "[" + ( ( _checked ) ? "X" : " " ) + "]";
-    CharColor colors = hasFocus() ? getFocusedCheckboxColors() : getColors();
+    CharColor colors = hasFocus() ? getSelectedColors() : getColors();
     Toolkit.printString(text, rect, colors);
   }
 
@@ -138,7 +130,7 @@ public class CheckBox extends Widget
   {
     if ( ch.equals(__changeStatusChar) )
     {
-      setValue(( _checked ) ? false : true);
+      setValue(!_checked);
       paint();
       return true;
     }
@@ -158,8 +150,6 @@ public class CheckBox extends Widget
 
   private void changeColors()
   {
-    //CharColor colors = hasFocus() ? getFocusedCheckboxColors() : getColors();
-    //Toolkit.changeColors(getRectangle(), colors);
     doRepaint();
   }
 

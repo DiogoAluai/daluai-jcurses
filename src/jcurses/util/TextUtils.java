@@ -29,36 +29,36 @@ public class TextUtils {
 			return new String[0];
 		}
 
-		String lines[] = aMsg.split("\n");
+		String[] lines = aMsg.split("\n");
 
-		for (int idx = 0; idx < lines.length; idx++) {
-			int curLen = lines[idx].length();
-			int pos = 0;
+        for (String line : lines) {
+            int curLen = line.length();
+            int pos = 0;
 
-			while (curLen > aLen) {
-				// find wrap point..
-				int brk = pos + aLen;
+            while (curLen > aLen) {
+                // find wrap point...
+                int brk = pos + aLen;
 
-				while ((brk > pos) && !Character.isWhitespace(lines[idx].charAt(brk))) {
-					brk--;
-				}
+                while ((brk > pos) && !Character.isWhitespace(line.charAt(brk))) {
+                    brk--;
+                }
 
-				// handle cases where there is no breaking point
-				if (brk <= pos) {
-					brk = pos + aLen + 1;
-				}
+                // handle cases where there is no breaking point
+                if (brk <= pos) {
+                    brk = pos + aLen + 1;
+                }
 
-				mLines.add(lines[idx].substring(pos, brk));
-				curLen = curLen - (brk - pos);
-				pos = brk + 1;
-			}
+                mLines.add(line.substring(pos, brk));
+                curLen = curLen - (brk - pos);
+                pos = brk + 1;
+            }
 
-			//if(curLen > 0)
-			mLines.add(lines[idx].substring(pos));
-		}
+            //if(curLen > 0)
+            mLines.add(line.substring(pos));
+        }
 
-		Object tmp[] = mLines.toArray();
-		String result[] = new String[tmp.length];
+		Object[] tmp = mLines.toArray();
+		String[] result = new String[tmp.length];
 
 		for (int idx = 0; idx < tmp.length; idx++) {
 			result[idx] = (String) tmp[idx];
@@ -75,7 +75,7 @@ public class TextUtils {
 	 * @return        A string consisting of the char repeated aLen times
 	 */
 	public static String replicate(char aChar, int aLen) {
-		StringBuffer mBuf = new StringBuffer(aLen);
+		StringBuilder mBuf = new StringBuilder(aLen);
 		for (int mIdx = 0; mIdx < aLen; mIdx++) {
 			mBuf.append(aChar);
 		}
@@ -93,7 +93,7 @@ public class TextUtils {
 	 */
 	public static List breakLines(String text, int maxWidth) {
 		ArrayList list = new ArrayList();
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		for (int i = 0; i < text.length(); i++) {
 			char c = text.charAt(i);
@@ -108,7 +108,7 @@ public class TextUtils {
 					list.add(line);
 				}
 
-				buffer = new StringBuffer();
+				buffer = new StringBuilder();
 			} else if (c == '\r') {
 				//ignore
 			} else {
@@ -147,13 +147,13 @@ public class TextUtils {
 	}
 
 	/**
-	 *  Center each String uniformly in in an Array of String
+	 *  Center each String uniformly in an Array of String
 	 *
 	 * @param  aLines  the Strings to center
 	 * @param  aLen    uniform field length of output strings
 	 * @return         Array of centered String
 	 */
-	public static String[] center(String aLines[], int aLen) {
+	public static String[] center(String[] aLines, int aLen) {
 		for (int idx = 0; idx < aLines.length; idx++) {
 			aLines[idx] = center(aLines[idx], aLen);
 		}
@@ -162,14 +162,14 @@ public class TextUtils {
 	}
 
 	/**
-	 *  Right-justify each String uniformly in in an Array of String,
+	 *  Right-justify each String uniformly in an Array of String,
 	 * padding left with blank.
 	 *
 	 * @param  aLines  the Strings to justify
 	 * @param  aLen    uniform field length of output strings
 	 * @return         Array of right-justified string
 	 */
-	public static String[] leftPad(String aLines[], int aLen) {
+	public static String[] leftPad(String[] aLines, int aLen) {
 		for (int idx = 0; idx < aLines.length; idx++) {
 			aLines[idx] = leftPad(aLines[idx], aLen);
 		}
@@ -184,12 +184,12 @@ public class TextUtils {
 	 * @param  aLines  the lines to merge
 	 * @return         Resultant String
 	 */
-	public static String mergeLines(String aLines[]) {
-		StringBuffer mOut = new StringBuffer();
+	public static String mergeLines(String[] aLines) {
+		StringBuilder mOut = new StringBuilder();
 
-		for (int idx = 0; idx < aLines.length; idx++) {
-			mOut.append(aLines[idx]).append("\n");
-		}
+        for (String aLine : aLines) {
+            mOut.append(aLine).append("\n");
+        }
 
 		mOut.append("\n");
 

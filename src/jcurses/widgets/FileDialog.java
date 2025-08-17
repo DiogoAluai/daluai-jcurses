@@ -19,7 +19,9 @@ import java.io.FileFilter;
  */
 public class FileDialog extends Dialog implements WidgetsConstants, ItemListener, ActionListener
 {
-  private static InputChar __returnChar   = new InputChar('\n');
+
+  private static final InputChar __returnChar = new InputChar('\n');
+
   Button                   _cancelButton  = null;
   Button                   _okButton      = null;
   JCursesFileFilterFactory _filterFactory = new DefaultFileFilterFactory();
@@ -27,7 +29,7 @@ public class FileDialog extends Dialog implements WidgetsConstants, ItemListener
   Label                    _filterLabel   = null;
   List                     _directories   = null;
   List                     _files         = null;
-  String                   _ioErrorText   = "Input/Output Error is occured!";
+  String                   _ioErrorText   = "Input/Output Error is occurred!";
   String                   _ioErrorTitle  = "I/O Error";
   TextField                _fileField     = null;
   TextField                _filterField   = null;
@@ -169,7 +171,7 @@ public class FileDialog extends Dialog implements WidgetsConstants, ItemListener
    * Sets a filter string
    * 
    * Sets a string used to filter the files, that are shown in selected directories. The filter string can be also modified by user. The filter string has to be
-   * in the form <prefix>* <posfix>, and matches all files, whose names start with <prefix>and end with <postfix>. Both <prefix> and <postfix> can be empty.
+   * in the form <prefix>* <postfix>, and matches all files, whose names start with <prefix>and end with <postfix>. Both <prefix> and <postfix> can be empty.
    *
    * @param filterString filter string
    */
@@ -188,7 +190,7 @@ public class FileDialog extends Dialog implements WidgetsConstants, ItemListener
   }
 
   /**
-   * Sets the text of the message, that is shown, if an i/o error is occured while the dialog tries to open a directory
+   * Sets the text of the message, that is shown, if an i/o error is occurred while the dialog tries to open a directory
    * 
    * @param message i/o error message's text
    */
@@ -198,7 +200,7 @@ public class FileDialog extends Dialog implements WidgetsConstants, ItemListener
   }
 
   /**
-   * Sets the title of the message, that is shown, if an i/o error is occured while the dialog tries to open a directory
+   * Sets the title of the message, that is shown, if an i/o error is occurred while the dialog tries to open a directory
    * 
    * @param message i/o error message's text
    */
@@ -268,7 +270,7 @@ public class FileDialog extends Dialog implements WidgetsConstants, ItemListener
   }
 
   /**
-   * Shows the i/o error message, if an i/o occcurs reading a directory. In the default implementation uses texts set with <code>setIOErrorMessageTitle</code>
+   * Shows the i/o error message, if an i/o occurs reading a directory. In the default implementation uses texts set with <code>setIOErrorMessageTitle</code>
    * and <code>setIOErrorMessageText</code>. can be modified in derived classes.
    */
   protected void directoryReadErrorMessage()
@@ -309,9 +311,7 @@ public class FileDialog extends Dialog implements WidgetsConstants, ItemListener
 
   private String getCurrentFileContent()
   {
-    String content = ( _file != null ) ? _file : getCurrentDirectory();
-
-    return content;
+      return ( _file != null ) ? _file : getCurrentDirectory();
   }
 
   private String getRelativePath(File file, String directoryPath)
@@ -366,8 +366,8 @@ public class FileDialog extends Dialog implements WidgetsConstants, ItemListener
       }
     }
     else
-      //Kann eigentlich nicht sein
-      new Message("Error", "An error is occured trying to read the directory\n " + directory, "OK");
+      //Kann eigentlich nicht sein. Should not arrive here?
+      new Message("Error", "An error is occurred trying to read the directory\n " + directory, "OK");
   }
 
   private void saveResult()
@@ -409,7 +409,7 @@ public class FileDialog extends Dialog implements WidgetsConstants, ItemListener
 
 class FileDialogFileFilter implements FileFilter
 {
-  FileFilter _filter = null;
+  FileFilter _filter;
 
   public FileDialogFileFilter(FileFilter filter)
   {

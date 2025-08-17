@@ -32,7 +32,7 @@ class DefaultFileFilter implements FileFilter {
 	/**
 	 *Constructor for the DefaultFileFilter object
 	 *
-	 * @param  filterString  String specifiying the filter
+	 * @param  filterString  String specifying the filter
 	 * @see java.io.FileFilter
 	 */
 	DefaultFileFilter(String filterString) {

@@ -1,12 +1,7 @@
-/******************************************************
- *
- * F?rs Logging
- */
 package jcurses.util;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-
 import java.util.Calendar;
 import java.util.HashSet;
 
@@ -14,13 +9,13 @@ import java.util.HashSet;
 *  This class implements the debugging for jcurses applications.
 *  Developing a jcurses application you can't use <code>System.out.println</code>
 *  calls, because the console is used for painting. Instead of this ypu have to use
-*  <code>system</code> or <code>debug<code> methods of this class. These made nothing,
-*  if the system property "jcurses.protocol.filename" isn't defined, if these is defined,
+*  <code>system</code> or <code>debug</code> methods of this class. These made nothing,
+*  if the system property "jcurses.protocol.filename" isn't defined, if these are defined,
 *  log messages are written to the file, whose name is defined in this property.
-*  There are two standard debug channels <code>SYSTEM<code> and <DEBUG> for <code>system</code>
+*  There are two standard debug channels <code>SYSTEM</code> and <DEBUG> for <code>system</code>
 *  and <code>debug</code> methods respective. You can define your own channels.
-*  To activate a channel the method activateChannnel must be used with cnannels'name as argument.
-*  Thereafter this name are to use as second argument in <code>log</code> calls, to write messages
+*  To activate a channel the method activateChannel must be used with channels' name as argument.
+*  Thereafter, this name are to use as second argument in <code>log</code> calls, to write messages
 *  to the channel.
 */
 public class Protocol
@@ -64,12 +59,12 @@ public class Protocol
 
   /**
   *  The method writes a log message
-  * @param message the messsage's text
+  * @param message the message text
   * @param channel name of the channel to write on.
   */
   public static void log(String message, String channel)
   {
-    if (isLoggingActivated() && isChannelActivated(channel))
+    if (isLoggingActivated() && isChannelActivated())
     {
       String outputMessage = getPrefix(channel) + " " + message;
       __logStream.println(outputMessage);
@@ -85,7 +80,7 @@ public class Protocol
     log(message, SYSTEM);
   }
 
-  private static boolean isChannelActivated(String channel)
+  private static boolean isChannelActivated()
   {
     return true;
   }
@@ -101,9 +96,8 @@ public class Protocol
   private static String getPrefix(String channel)
   {
     Calendar cal  = Calendar.getInstance();
-    String prefix = "[" + cal.get(Calendar.DATE) + "." + (cal.get(Calendar.MONTH) + 1) + "." + cal.get(Calendar.YEAR) + "  " + cal.get(Calendar.HOUR) + ":" +
-      cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND) + "  channel=" + channel + "]";
-    return prefix;
+      return "[" + cal.get(Calendar.DATE) + "." + (cal.get(Calendar.MONTH) + 1) + "." + cal.get(Calendar.YEAR) + "  " + cal.get(Calendar.HOUR) + ":" +
+        cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND) + "  channel=" + channel + "]";
   }
 
   private static void initLogStreamIfPossible()
@@ -120,7 +114,7 @@ public class Protocol
     }
     catch (Exception e)
     {
-      //Etwas nicht geklappt. Also kein Logging
+      // Something went wrong. So no logging
     }
   }
 

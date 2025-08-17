@@ -6,11 +6,11 @@ package jcurses.event;
 public interface ActionListener {
 	
     /**
-    *  The method will be called by an widget, generating <code>ActionEvent</code> instances,
+    *  The method will be called by a widget, generating <code>ActionEvent</code> instances,
     * if the listener has been registered by it.
     * 
-    * @param event the event occured
+    * @param event the event occurred
     */
-	public abstract void actionPerformed(ActionEvent event);
+	void actionPerformed(ActionEvent event);
 
 }

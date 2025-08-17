@@ -10,8 +10,9 @@ import jcurses.util.Rectangle;
  */
 public class ScrollbarPainter
 {
-  private IScrollable   _widget               = null;
-  private Rectangle     _borderRectangle      = null;
+
+  private final IScrollable _widget;
+  private Rectangle _borderRectangle = null;
   private ScrollbarData _currentScrollbarData = null;
 
   /**
@@ -26,7 +27,7 @@ public class ScrollbarPainter
   }
 
   /**
-   * This method must be called, if the widget is painted or repainted. If the the widget was already visible, but the content (position ) has been changed, the
+   * This method must be called, if the widget is painted or repainted. If the widget was already visible, but the content (position ) has been changed, the
    * method <code>refresh</code> must be used
    *  
    */
@@ -150,7 +151,7 @@ public class ScrollbarPainter
     }
   }
 
-  private class ScrollbarData
+  private static class ScrollbarData
   {
     int horizontalOffset = 0;
     int horizontalLength = 0;

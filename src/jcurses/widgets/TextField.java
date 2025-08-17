@@ -7,7 +7,7 @@ import jcurses.system.Toolkit;
 import jcurses.util.Rectangle;
 
 /**
- * This class implements a input text field to edie a one line text.
+ * This class implements an input text field to edie a one line text.
  *  
  */
 public class TextField extends TextComponent
@@ -74,10 +74,10 @@ public class TextField extends TextComponent
   public void setText(String text)
   {
     if ( text == null )
-      super.setText(text);
+      super.setText(null);
     else
     {
-      if ( text.indexOf("\n") != - 1 )
+      if (text.contains("\n"))
         super.setText(text.substring(0, text.indexOf("\n")));
       else
         super.setText(text);
@@ -102,13 +102,13 @@ public class TextField extends TextComponent
   {
     super.doPaint();
 
-    // Begrenzer malen
+    // Painting limiters
     Toolkit.printString(getDelimiterString(), getAbsoluteX(), getAbsoluteY(), getBorderColors());
     Toolkit.printString(getDelimiterString(), ( getAbsoluteX() + getSize().getWidth() ) - 1, getAbsoluteY(), getBorderColors());
   }
 
   /**
-   * Input-Behandlundg
+   * Input handling
    */
   protected boolean handleInput(InputChar ch)
   {
@@ -125,7 +125,7 @@ public class TextField extends TextComponent
   private String getDelimiterString()
   {
     if ( _delimiter == null )
-      return new String("|");
+      return "|";
 
     return _delimiter;
   }

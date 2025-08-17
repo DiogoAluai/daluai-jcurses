@@ -1,8 +1,6 @@
 
 package jcurses.util;
 
-import java.util.StringTokenizer;
-
 import jcurses.event.ActionEvent;
 import jcurses.event.ActionListener;
 import jcurses.widgets.Button;
@@ -11,21 +9,17 @@ import jcurses.widgets.Dialog;
 import jcurses.widgets.Label;
 import jcurses.widgets.WidgetsConstants;
 
+import java.util.StringTokenizer;
+
 /**
- * This is a class to create and show user defined messages. Such message is a dialog with an user defined title, containing an user defined text and a button
- * to close the window with an user defined label.
+ * This is a class to create and show user defined messages. Such message is a dialog with a user defined title, containing a user defined text and a button
+ * to close the window with a user defined label.
  */
 
 public class Message extends Dialog implements ActionListener
 {
 
-  String _title  = null;
-  String _text   = null;
-
-  Button _button = null;
-  Label  _label  = null;
-
-  /**
+    /**
    * The constructor
    * 
    * @param title the message's title
@@ -39,15 +33,14 @@ public class Message extends Dialog implements ActionListener
 
     DefaultLayoutManager manager = (DefaultLayoutManager)getRootPanel().getLayoutManager();
 
-    _label = new Label(text);
-    _button = new Button(buttonLabel);
-    _title = title;
+      Label _label = new Label(text);
+      Button _button = new Button(buttonLabel);
 
-    _button.addListener(this);
+      _button.addListener(this);
 
-    manager.addWidget(_label, 0, 0, getWidth(text, _title) + 2, getHeight(text) + 2, WidgetsConstants.ALIGNMENT_CENTER, WidgetsConstants.ALIGNMENT_CENTER);
+    manager.addWidget(_label, 0, 0, getWidth(text, title) + 2, getHeight(text) + 2, WidgetsConstants.ALIGNMENT_CENTER, WidgetsConstants.ALIGNMENT_CENTER);
 
-    manager.addWidget(_button, 0, getHeight(text) + 2, getWidth(text, _title) + 2, 5, WidgetsConstants.ALIGNMENT_CENTER, WidgetsConstants.ALIGNMENT_CENTER);
+    manager.addWidget(_button, 0, getHeight(text) + 2, getWidth(text, title) + 2, 5, WidgetsConstants.ALIGNMENT_CENTER, WidgetsConstants.ALIGNMENT_CENTER);
 
   }
 

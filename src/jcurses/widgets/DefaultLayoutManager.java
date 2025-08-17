@@ -4,7 +4,7 @@ package jcurses.widgets;
 import jcurses.util.Rectangle;
 
 /**
- * This is a default layout manager. The constraints state for each widget to layout a coordinates of the rectangle, within that the widget is placed and the
+ * This is a default layout manager. The constraints state for each widget to layout coordinates of the rectangle, within that the widget is placed and the
  * alignment of the widget, if its preferred size is smaller as the rectangle's size-
  */
 public class DefaultLayoutManager implements LayoutManager, WidgetsConstants
@@ -38,17 +38,16 @@ public class DefaultLayoutManager implements LayoutManager, WidgetsConstants
 
     int prefWidth = prefSize.getWidth();
     int prefHeight = prefSize.getHeight();
-    /**
-     * Negativ oder 0 bedeutet, da? keine bevorzugte Gr?sse angegeben wurde
-     */
+
+    //Negative or 0 means that no preferred size has been specified
     if ( prefWidth <= 0 )
       prefWidth = cstr.width;
 
     if ( prefHeight <= 0 )
       prefHeight = cstr.height;
 
-    int width = 0;
-    int height = 0;
+    int width;
+    int height;
 
     if ( prefWidth < cstr.width )
     {
@@ -91,7 +90,7 @@ public class DefaultLayoutManager implements LayoutManager, WidgetsConstants
       alignment = 2;
     }
 
-    int result = 0;
+    int result;
     if ( alignment == 2 )
     {
       result = contC;
@@ -108,13 +107,13 @@ public class DefaultLayoutManager implements LayoutManager, WidgetsConstants
   }
 
   /**
-   * Adds a widget to the boundeb container
+   * Adds a widget to the bounded container
    * 
    * @param widget widget to be added
    * @param x the x coordinate of the top left corner of the rectangle, within that the widget is placed
    * @param y the y coordinate of the top left corner of the rectangle, within that the widget is placed
    * @param width the width of the rectangle, within that the widget is placed
-   * @param height the hight of the rectangle, within that the widget is placed
+   * @param height the height of the rectangle, within that the widget is placed
    * @param verticalConstraint vertical alignment constraint. Following values a possible: <code>WidgetConstraints.ALIGNMENT_CENTER</code>,
    *          <code>WidgetConstraints.ALIGNMENT_TOP</code>,<code>WidgetConstraints.ALIGNMENT_BOTTOM</code>
    * @param horizontalConstraint vertical alignment constraint, Following values are possible: *<code>WidgetConstraints.ALIGNMENT_CENTER</code>,
@@ -143,12 +142,12 @@ public class DefaultLayoutManager implements LayoutManager, WidgetsConstants
 class DefaultLayoutConstraint
 {
 
-  int x                    = 0;
-  int y                    = 0;
-  int width                = 0;
-  int height               = 0;
-  int horizontalConstraint = 0;
-  int verticalConstraint   = 0;
+  int x;
+  int y;
+  int width;
+  int height;
+  int horizontalConstraint;
+  int verticalConstraint;
 
   DefaultLayoutConstraint(int aX, int aY, int aWidth, int aHeight, int aHorizontalConstraint, int aVerticalConstraint)
   {

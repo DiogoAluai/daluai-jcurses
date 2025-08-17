@@ -3,7 +3,7 @@ package jcurses.system;
 
 /**
  * Instances of this class are used by painting to set color attributes of painted chars. Both black-white mode and color mode attributes can ( and must be) be
- * declared. For the color mode, colors of the background an the foreground can be declared, for the background mode can be declared, whether painted chars are
+ * declared. For the color mode, colors of the background and the foreground can be declared, for the background mode can be declared, whether painted chars are
  * output normal, reverse or in string font (bold).
  * <p>
  * possible values for colors: <br>
@@ -11,7 +11,7 @@ package jcurses.system;
  * <code>BLUE</code><br>
  * <code>CYAN</code><br>
  * <code>GREEN</code><br>
- * <code>NAGENTA</code><br>
+ * <code>MAGENTA</code><br>
  * <code>RED</code><br>
  * <code>YELLOW</code><br>
  * <code>WHITE</code>
@@ -92,7 +92,6 @@ public class CharColor {
 		_foreground = foreground;
 		_blackWhiteAttribute = blackWhiteAttribute;
 		_colorAttribute = colorAttribute;
-		//initChtype();
 	}
 
 	/**
@@ -124,7 +123,6 @@ public class CharColor {
 	public void setBackground(short background) {
 		verifyColor(background);
 		_background = background;
-		//initChtype();
 	}
 
 	/**
@@ -180,7 +178,6 @@ public class CharColor {
 	public void setForeground(short foreground) {
 		verifyColor(foreground);
 		_foreground = foreground;
-		//initChtype();
 	}
 
 	/**
@@ -267,7 +264,7 @@ public class CharColor {
 	}
 
 	/**
-	 *  Gets the attribute attribute of the CharColor object
+	 *  Gets the attribute of the CharColor object
 	 *
 	 * @return    The attribute value
 	 */

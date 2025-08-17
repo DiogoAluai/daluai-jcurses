@@ -12,8 +12,8 @@ package jcurses.util;
 
 public class Paging {
 	
-	private int _pageSize = 0;
-	private int _size = 0;
+	private final int _pageSize;
+	private final int _size;
 	
 	
 	/**
@@ -38,7 +38,7 @@ public class Paging {
 	*/
 	
 	public int getPageNumber(int index) {
-  		int result = 0;
+  		int result;
 	
 		if (index <= 0) {
 			result = 0;
@@ -77,8 +77,7 @@ public class Paging {
 	*/
 	  
  	public int getPageStartIndex(int pageNumber) {
-  		int result = Math.max(0,getPageEndIndex(pageNumber)-_pageSize+1);
-  		return result;
+        return Math.max(0,getPageEndIndex(pageNumber)-_pageSize+1);
 	}
 	  
 	
@@ -91,8 +90,7 @@ public class Paging {
 	*/
 	
    public int getPageEndIndex(int pageNumber) {
-  		int result = Math.min(_size-1,(pageNumber+1)*_pageSize-1);
-  		return result;
+       return Math.min(_size-1,(pageNumber+1)*_pageSize-1);
    }
 	
    

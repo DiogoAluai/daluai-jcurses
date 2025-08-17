@@ -6,11 +6,11 @@ package jcurses.event;
 public interface ItemListener {
 	
     /**
-    *  The method will be called by an widget, generating <code>ItemEvent</code> instances,
+    *  The method will be called by a widget, generating <code>ItemEvent</code> instances,
     * if the listener has been registered by it.
     * 
-    * @param event the event occured
+    * @param event the event occurred
     */
-	public abstract void stateChanged(ItemEvent event);
+	void stateChanged(ItemEvent event);
 
 }

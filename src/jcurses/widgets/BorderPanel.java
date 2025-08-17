@@ -13,7 +13,7 @@ import jcurses.util.Rectangle;
 public class BorderPanel extends Panel {
 
 	private CharColor _colors = getDefaultBorderColors();
-	private static CharColor __defaultBorderColors = new CharColor(CharColor.WHITE, CharColor.BLACK);
+	private static final CharColor __defaultBorderColors = new CharColor(CharColor.WHITE, CharColor.BLACK);
 
 	/**
 	 *Constructor for the BorderPanel with default w / h

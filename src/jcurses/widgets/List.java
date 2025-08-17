@@ -1,8 +1,6 @@
 
 package jcurses.widgets;
 
-import java.util.Vector;
-
 import jcurses.event.ItemEvent;
 import jcurses.event.ItemListener;
 import jcurses.event.ItemListenerManager;
@@ -13,19 +11,24 @@ import jcurses.themes.Theme;
 import jcurses.util.Paging;
 import jcurses.util.Rectangle;
 
+import java.util.Vector;
+
 /**
- * This class implements a list widget to select and 'invoke' one ore more items. Listeners can be registered to track selecting deselecting and 'invoking' of
+ * This class implements a list widget to select and 'invoke' one or more items. Listeners can be registered to track selecting deselecting and 'invoking' of
  * items.
  */
 public class List extends Widget implements IScrollable
 {
-  private static InputChar    __changeStatusChar = new InputChar(' ');
-  private static InputChar    __callItemChar     = new InputChar('\n');
-  private ItemListenerManager _listenerManager   = new ItemListenerManager();
+
+  private static final InputChar    __changeStatusChar = new InputChar(' ');
+  private static final InputChar    __callItemChar     = new InputChar('\n');
+
+  private final ItemListenerManager _listenerManager   = new ItemListenerManager();
+  private final Vector              _items             = new Vector();
+  private final Vector              _selected          = new Vector();
+
   private ScrollbarPainter    _scrollbars        = null;
   private String              _title             = null;
-  private Vector              _items             = new Vector();
-  private Vector              _selected          = new Vector();
   private boolean             _multiple          = false;
   private boolean             _selectable        = true;
   private int                 _startIndex        = 0;
@@ -36,9 +39,9 @@ public class List extends Widget implements IScrollable
   /**
    * The constructor
    * 
-   * @param visibleSize number of visible items. If the entire number of items is more, the widget scrolls items 'by a window'. If -1 is given, than the visible
+   * @param visibleSize number of visible items. If the entire number of items is more, the widget scrolls items 'by a window'. If -1 is given, then the visible
    *          size is defined dependent of the layout size, that is, the widget has no preferred y size.
-   * @param multiple true, if more as one items can be selected a time, false, if only one item can be selected at a time, in this case selecting of an item
+   * @param multiple true, if more as one item can be selected a time, false, if only one item can be selected at a time, in this case selecting of an item
    *          causes deselecting of the previous selected item.
    */
   public List(int visibleSize, boolean multiple)
@@ -51,7 +54,7 @@ public class List extends Widget implements IScrollable
   /**
    * The constructor.
    * 
-   * @param visibleSize number of visible items. If the entire number of items is more, the widget scrolls items 'by a window'. If -1 is given, than the visible
+   * @param visibleSize number of visible items. If the entire number of items is more, the widget scrolls items 'by a window'. If -1 is given, then the visible
    *          size is defined dependent of the layout size, that is, the widget has no preferred y size.
    */
   public List(int visibleSize)
@@ -76,9 +79,9 @@ public class List extends Widget implements IScrollable
 
   public float getHorizontalScrollbarLength()
   {
-    if ( ( _items.size() == 0 ) || ( getMaxLength() <= getLineWidth() ) )
+    if ( (_items.isEmpty()) || ( getMaxLength() <= getLineWidth() ) )
 
-      // Keine Items - kein scrollbar
+      // no Items - no scrollbar
       return 0;
 
     if ( getMaxLength() > getLineWidth() )
@@ -89,9 +92,9 @@ public class List extends Widget implements IScrollable
 
   public float getHorizontalScrollbarOffset()
   {
-    if ( ( _items.size() == 0 ) || ( getMaxLength() <= getLineWidth() ) )
+    if ( (_items.isEmpty()) || ( getMaxLength() <= getLineWidth() ) )
 
-      // Keine Items - kein scrollbar
+      // no items - no scrollbar
       return 0;
 
     if ( getMaxLength() > getLineWidth() )
@@ -177,7 +180,7 @@ public class List extends Widget implements IScrollable
    */
   public boolean isSelected(int pos)
   {
-    return ( (Boolean)_selected.elementAt(pos) ).booleanValue();
+    return (Boolean) _selected.elementAt(pos);
   }
 
   /**
@@ -339,7 +342,7 @@ public class List extends Widget implements IScrollable
    * This is currently the same as a call to getTrackedIndex(), however that is inconsistent with the rest of the API. It should return instead the String value
    * of the item. <br>
    * <br>
-   * Currently it is simply being marked deprecated to avoiud causing people a lot of grief, however in a future release, it will be changed to return the
+   * Currently it is simply being marked deprecated to avoid causing people a lot of grief, however in a future release, it will be changed to return the
    * correct String value. In the meantime, getTrackedItemStr() has been introduced to provide the function of returning the String value.
    * 
    * @return the index of the current tracked item.
@@ -354,7 +357,7 @@ public class List extends Widget implements IScrollable
   /**
    * Gets the String value of the currently tracked item. <br>
    * <br>
-   * This method is an iterim solution to avoid breaking existing code since really getTrackedItem() should serve this purpose.
+   * This method is an interim solution to avoid breaking existing code since really getTrackedItem() should serve this purpose.
    * 
    * @return the index of the current tracked item.
    */
@@ -365,9 +368,9 @@ public class List extends Widget implements IScrollable
 
   public float getVerticalScrollbarLength()
   {
-    if ( _items.size() == 0 )
+    if (_items.isEmpty())
 
-      // Keine Items - kein scrollbar
+      // no items - no scrollbar
       return 0;
 
     if ( _items.size() > getVisibleSize() )
@@ -378,9 +381,9 @@ public class List extends Widget implements IScrollable
 
   public float getVerticalScrollbarOffset()
   {
-    if ( _items.size() == 0 )
+    if (_items.isEmpty())
 
-      // Keine Items - kein scrollbar
+      // no items - no scrollbar
       return 0;
 
     if ( _items.size() > getVisibleSize() )
@@ -398,7 +401,7 @@ public class List extends Widget implements IScrollable
   public void add(int pos, String item)
   {
     _items.add(pos, item);
-    _selected.add(pos, new Boolean(false));
+    _selected.add(pos, Boolean.FALSE);
     reset();
     if ( isVisible(pos) )
       refresh();
@@ -476,9 +479,9 @@ public class List extends Widget implements IScrollable
   }
 
   /**
-   * Removes the first occurence of <code>item</code> from the list.
+   * Removes the first occurrence of <code>item</code> from the list.
    * 
-   * @param item string, whose first occurence is to remove from the list.
+   * @param item string, whose first occurrence is to remove from the list.
    */
   public void remove(String item)
   {
@@ -547,7 +550,7 @@ public class List extends Widget implements IScrollable
   }
 
   /**
-   * This method tests, if the item at the specified position can be selected and invoked at all. The sense is, to give derived classes the posssibility to
+   * This method tests, if the item at the specified position can be selected and invoked at all. The sense is, to give derived classes the possibility to
    * implement 'separators'. Here returns always <code>true</code>.
    * 
    * @param i the position to test
@@ -590,8 +593,8 @@ public class List extends Widget implements IScrollable
     int backupStartIndex = _startIndex;
     int backupTrackedIndex = _trackedIndex;
 
-    // Keine Items - keine Eingabe
-    if ( _items.size() == 0 )
+    // no items - no input
+    if (_items.isEmpty())
       return false;
 
     if ( ch.getCode() == InputChar.KEY_RIGHT )
@@ -713,7 +716,7 @@ public class List extends Widget implements IScrollable
     Rectangle rect = (Rectangle)getSize().clone();
     int width = rect.getWidth() - 2;
     int result = getMaxLength() - width;
-    result = ( result < 0 ) ? 0 : result;
+    result = Math.max(result, 0);
 
     return result;
   }
@@ -738,7 +741,7 @@ public class List extends Widget implements IScrollable
 
   private boolean isVisible(int index)
   {
-    if ( _items.size() == 0 )
+    if (_items.isEmpty())
       return false;
 
     return ( ( index >= _startIndex ) && ( index < ( _startIndex + getVisibleSize() ) ) );
@@ -762,7 +765,7 @@ public class List extends Widget implements IScrollable
 
   private boolean decrementPage()
   {
-    int nextPos = 0;
+    int nextPos;
 
     if ( getCurrentPageNumber() > 0 )
       nextPos = getPaging().getIndexByPageOffset(getCurrentPageNumber() - 1, getCurrentPageOffset());
@@ -820,7 +823,7 @@ public class List extends Widget implements IScrollable
         eraseItem(rect, i);
     }
 
-    if ( _items.size() == 0 )
+    if (_items.isEmpty())
       drawFirstRowSelected();
   }
 
@@ -854,7 +857,7 @@ public class List extends Widget implements IScrollable
       return false;
 
     // we use a single virtual page if not displayed
-    int page = 0;
+    int page;
     int start = 0;
     int end = _items.size();
 
@@ -916,14 +919,12 @@ public class List extends Widget implements IScrollable
 
   private boolean incrementPage()
   {
-    int nextPos = 0;
+    int nextPos;
 
     if ( getCurrentPageNumber() < ( getPageSize() - 1 ) )
       nextPos = getPaging().getIndexByPageOffset(getCurrentPageNumber() + 1, getCurrentPageOffset());
     else
       nextPos = getItemsCount() - 1;
-
-    //System.err.println("Next Page ["+nextPos+"]");
 
     return findNextSelectableItem(nextPos, 1, false, 0);
   }
@@ -969,7 +970,7 @@ public class List extends Widget implements IScrollable
     else
     {
       if ( _startPos != 0 )
-        item = item.substring(_startPos, item.length());
+        item = item.substring(_startPos);
     }
 
     if ( ( item.length() < width ) && ( toSelect ) )
@@ -998,8 +999,6 @@ public class List extends Widget implements IScrollable
     }
     else
     {
-      //System.err.println("Repaint");
-      //paint();
       drawItems();
     }
   }
@@ -1012,14 +1011,6 @@ public class List extends Widget implements IScrollable
   private void redrawItem(int index, Rectangle rect)
   {
     drawItem(index, rect);
-    //int x = rect.getX() + 1;
-    //int y = ( rect.getY() + 1 + index ) - _startIndex;
-    //int width = rect.getWidth() - 2;
-    //Rectangle itemRect = new Rectangle(x, y, width, 1);
-    //printItem(index, itemRect);
-    //boolean toSelect = ( ( ( index == _trackedIndex ) && hasFocus() ) || ( isSelected(index) ) );
-    //CharColor colors = toSelect ? getSelectedColors() : getColors();
-    //Toolkit.changeColors(itemRect, colors);
   }
 
   private void redrawItemBySelecting(int index)
@@ -1063,7 +1054,7 @@ public class List extends Widget implements IScrollable
     if ( ! ( isSelected(index) == value ) )
     {
       int selected = getSelectedIndex();
-      _selected.set(index, new Boolean(value));
+      _selected.set(index, value);
 
       if ( ( ! _multiple ) && value )
       {

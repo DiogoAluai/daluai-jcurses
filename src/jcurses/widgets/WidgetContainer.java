@@ -1,25 +1,21 @@
-/**
- * Die Klasse ist die Root-Klasse aller Container-Klassen. Ihre Aufgabe besteht darin eine Reihe von Widgets zu verwalten, die Eingabe an Sie weitezuleiten etc
- */
-
 package jcurses.widgets;
-
-import java.util.Hashtable;
-import java.util.Vector;
 
 import jcurses.system.Toolkit;
 import jcurses.util.Rectangle;
+
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * This class is a superclass for widget containers, that is, for widgets, that can contain other widgets
  */
 public abstract class WidgetContainer extends Widget
 {
-  private Hashtable     _constraints   = new Hashtable();
 
-  /** LayoutManager */
+  private final Hashtable _constraints = new Hashtable();
+  private final Vector _widgets = new Vector();
+
   private LayoutManager _layoutManager = null;
-  private Vector        _widgets       = new Vector();
 
   /**
    * The method sets container's layout manager
@@ -49,7 +45,7 @@ public abstract class WidgetContainer extends Widget
   }
 
   /**
-   * The method paits the container self, that is all except childrens. Is called by <code>doPaint</code>. Must be overrided by derived classes.
+   * The method paints the container self, that is all except children. Is called by <code>doPaint</code>. Must be overridden by derived classes.
    */
   protected abstract void paintSelf();
 
@@ -57,7 +53,7 @@ public abstract class WidgetContainer extends Widget
    * This method returns a rectangle to be used as painting surface for container's children. By default, the entire container's surface is used. THe object
    * returned is a new instance and may be modified.
    * 
-   * @return Rectangle defineing Painting surface for container's children
+   * @return Rectangle defining Painting surface for container's children
    */
   protected Rectangle getClientArea()
   {
@@ -122,11 +118,11 @@ public abstract class WidgetContainer extends Widget
   }
 
   /**
-   * The method adds a widget to the container, declaring widget's lyouting constraints. This method is called by layout manager and cann't be called by
+   * The method adds a widget to the container, declaring widget's layout constraints. This method is called by layout manager and can't be called by
    * developer. To add a widget to the container, a developer must use methods of container's layout manager.
    * 
    * @param widget widget to add
-   * @param constraint layouting constraints
+   * @param constraint layout constraints
    */
   protected void addWidget(Widget widget, Object constraint)
   {
@@ -156,7 +152,7 @@ public abstract class WidgetContainer extends Widget
 
   /**
    * The method repaints the container self, that is all, except its children. <br>
-   * Is called by <code>doRepaint</code>. The default inmplementation calls paintSelf(). <br>
+   * Is called by <code>doRepaint</code>. The default implementation calls paintSelf(). <br>
    * Subclasses should override this method if repaintSelf() can be more efficient that paintSelf().
    */
   protected void repaintSelf()
@@ -165,7 +161,7 @@ public abstract class WidgetContainer extends Widget
   }
 
   /**
-   * The method layouts all childrens bei the widget, using containers layout manager. The method is called by framework, before it paints a window-
+   * The method layouts all children bei the widget, using containers layout manager. The method is called by framework, before it paints a window-
    */
   protected void pack()
   {
@@ -185,7 +181,7 @@ public abstract class WidgetContainer extends Widget
   }
 
   /**
-   * The method removes a widget from the container. This method is called by layout manager and cann't be called by developer. To remove a widget from the
+   * The method removes a widget from the container. This method is called by layout manager and can't be called by developer. To remove a widget from the
    * container, a developer must use methods of container's layout manager.
    * 
    * @param widget widget to remove

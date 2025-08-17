@@ -2,7 +2,7 @@
 package jcurses.util;
 
 /**
- * This is a class to represent an screen rectangle. To implement this class was needed, because <code>java.awt.rectangle</code> works with double's, this is
+ * This is a class to represent a screen rectangle. To implement this class was needed, because <code>java.awt.rectangle</code> works with double's, this is
  * by a text based terminal senseless.
  */
 public class Rectangle
@@ -30,7 +30,7 @@ public class Rectangle
 
   public Rectangle()
   {
-  // need zero arg constructor
+    // need zero arg constructor
   }
 
   /**
@@ -46,11 +46,11 @@ public class Rectangle
   }
 
   /**
-   * Returns true if this rectangle is ABOVE the specified rectange
+   * Returns true if this rectangle is ABOVE the specified rectangle
    * 
-   * @param aRect The reference rectange for the comparison
+   * @param aRect The reference rectangle for the comparison
    * 
-   * @return true if this rectange is above, or false if it is not.
+   * @return true if this rectangle is above, or false if it is not.
    */
   public boolean isAbove(Rectangle aRect)
   {
@@ -58,11 +58,11 @@ public class Rectangle
   }
 
   /**
-   * Returns true if the this rectangle is BELOW the specified rectange
+   * Returns true if the rectangle is BELOW the specified rectangle
    * 
-   * @param aRect The reference rectange for the comparison
+   * @param aRect The reference rectangle for the comparison
    * 
-   * @return true if this rectange is below, or false if it is not.
+   * @return true if this rectangle is below, or false if it is not.
    */
   public boolean isBelow(Rectangle aRect)
   {
@@ -76,7 +76,7 @@ public class Rectangle
 
   /**
    * Returns true or false indicating if the Rectangle is Empty. Empty is defined in this case as covering 0 units of area in the arbitrary coordinate system
-   * used for specifying location and size. If the rectange occupies at least one unit of area, is is considered not empty, and false is returned.
+   * used for specifying location and size. If the rectangle occupies at least one unit of area, is considered not empty, and false is returned.
    * 
    * @return <code>true</code> if the rectangle is empty in other case <code>false</code>
    */
@@ -111,11 +111,11 @@ public class Rectangle
   }
 
   /**
-   * Returns true if the this rectangle is to the LEFT the specified rectange
+   * Returns true if the rectangle is to the LEFT the specified rectangle
    * 
-   * @param aRect The reference rectange for the comparison
+   * @param aRect The reference rectangle for the comparison
    * 
-   * @return true if this rectange is to the left, or false if it is not.
+   * @return true if this rectangle is to the left, or false if it is not.
    */
   public boolean isLeftOf(Rectangle aRect)
   {
@@ -152,11 +152,11 @@ public class Rectangle
   }
 
   /**
-   * Returns true if the this rectangle is to the RIGHT the specified rectange
+   * Returns true if the rectangle is to the RIGHT the specified rectangle
    * 
-   * @param aRect The reference rectange for the comparison
+   * @param aRect The reference rectangle for the comparison
    * 
-   * @return true if this rectange is to the right, or false if it is not.
+   * @return true if this rectangle is to the right, or false if it is not.
    */
   public boolean isRightOf(Rectangle aRect)
   {
@@ -179,7 +179,7 @@ public class Rectangle
   }
 
   /**
-   * Gets the Width of the rectanagle
+   * Gets the Width of the rectangle
    * 
    * @return the width of the rectangle
    */
@@ -241,14 +241,14 @@ public class Rectangle
   }
 
   /**
-   * The method veriifies, whether a rectangle lies within this rectangle
+   * The method verifies, whether a rectangle lies within this rectangle
    * 
    * @param X x coordinate of the rectangle, whose containment is to verify
    * @param Y y coordinate of the rectangle, whose containment is to verify
    * @param W width of the rectangle, whose containment is to verify
    * @param H x height of the rectangle, whose containment is to verify
    * 
-   * @return <code>true</code> if the parameter rectangle is withhin this rectangle in other case <code>false</code>
+   * @return <code>true</code> if the parameter rectangle is within this rectangle in other case <code>false</code>
    */
   public boolean contains(int X, int Y, int W, int H)
   {
@@ -264,11 +264,11 @@ public class Rectangle
   }
 
   /**
-   * The method veriifies, whether a rectangle lies within this rectangle
+   * The method verifies, whether a rectangle lies within this rectangle
    * 
    * @param rect the rectangle, whose containment is to be verified
    * 
-   * @return <code>true</code> if the parameter rectangle is withhin this rectangle in other case <code>false</code>
+   * @return <code>true</code> if the parameter rectangle is within this rectangle in other case <code>false</code>
    */
   public boolean contains(Rectangle rect)
   {
@@ -278,7 +278,7 @@ public class Rectangle
   /**
    * Returns the square of the distance between the center point of this Rectangle and the specified Rectangle
    * 
-   * @param aRect the reference rectange from which distance is to be calculated
+   * @param aRect the reference rectangle from which distance is to be calculated
    * 
    * @return the squared distance in units as an integer
    */
@@ -292,7 +292,7 @@ public class Rectangle
   /**
    * Returns the horizontally biased distance between the origin point of this Rectangle and the specified Rectangle.
    * 
-   * @param aRect the reference rectange from which distance is to be calculated
+   * @param aRect the reference rectangle from which distance is to be calculated
    * 
    * @return the horizontal distance in integer units
    */
@@ -304,7 +304,7 @@ public class Rectangle
   /**
    * Returns the horizontally biased distance between the center point of this Rectangle and the specified Rectangle.
    * 
-   * @param aRect the reference rectange from which distance is to be calculated
+   * @param aRect the reference rectangle from which distance is to be calculated
    * 
    * @return horizontal distance in integer units
    */
@@ -314,12 +314,12 @@ public class Rectangle
   }
 
   /**
-   * The method veriifies, whether a point lies within this rectangle
+   * The method verifies, whether a point lies within this rectangle
    * 
    * @param x x coordinate of the point, whose containment is to verify
    * @param y y coordinate of the point, whose containment is to verify
    * 
-   * @return <code>true</code> if the point is withhin this rectangle in other case <code>false</code>
+   * @return <code>true</code> if the point is within this rectangle in other case <code>false</code>
    */
   public boolean inside(int x, int y)
   {
@@ -327,7 +327,7 @@ public class Rectangle
   }
 
   /**
-   * The method returns an intersection of the rectangle with an other rectangle, that is, the greatest rectangle, that is contained in both.
+   * The method returns an intersection of the rectangle with another rectangle, that is, the greatest rectangle, that is contained in both.
    * 
    * @param r rectangle to build intersection with this rectangle
    * 
@@ -370,13 +370,13 @@ public class Rectangle
   /**
    * Returns the square of the shortest distance between the edge of this Rectangle and the edge of the specified Rectangle
    * 
-   * @param aRect the reference rectange from which distance is to be calculated
+   * @param aRect the reference rectangle from which distance is to be calculated
    * 
    * @return the squared distance in units as an integer
    */
   public int shortestDistanceFrom(Rectangle aRect)
   {
-    int x = 0;
+    int x;
 
     if ( getRight() <= aRect.getLeft() )
       x = aRect.getLeft() - getRight();
@@ -385,7 +385,7 @@ public class Rectangle
     else
       x = 0; // overlapping X
 
-    int y = 0;
+    int y;
 
     if ( getTop() >= aRect.getBottom() )
       y = aRect.getBottom() - getTop();
@@ -403,7 +403,7 @@ public class Rectangle
   }
 
   /**
-   * The method returns an union of the rectangle with an other rectangle, that is, the smallest rectangle, that contains both.
+   * The method returns a union of the rectangle with another rectangle, that is, the smallest rectangle, that contains both.
    * 
    * @param r rectangle to build union with this rectangle
    * 
@@ -428,7 +428,7 @@ public class Rectangle
   /**
    * Returns the vertical distance between the origin point of this Rectangle and the specified Rectangle.
    * 
-   * @param aRect the reference rectange from which distance is to be calculated
+   * @param aRect the reference rectangle from which distance is to be calculated
    * 
    * @return vertical distance in integer units
    */
@@ -440,7 +440,7 @@ public class Rectangle
   /**
    * Returns the vertical distance between the center point of this Rectangle and the specified Rectangle.
    * 
-   * @param aRect the reference rectange from which distance is to be calculated
+   * @param aRect the reference rectangle from which distance is to be calculated
    * 
    * @return vertical distance in integer units
    */

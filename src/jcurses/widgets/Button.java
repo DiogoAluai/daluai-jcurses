@@ -1,8 +1,6 @@
 
 package jcurses.widgets;
 
-import java.util.Vector;
-
 import jcurses.event.ActionEvent;
 import jcurses.event.ActionListener;
 import jcurses.event.ActionListenerManager;
@@ -12,14 +10,18 @@ import jcurses.system.Toolkit;
 import jcurses.themes.Theme;
 import jcurses.util.Rectangle;
 
+import java.util.Vector;
+
 /**
  * This class implements a button-widget. Such button has a label and is 'clicked'
  * by user typing a special character (default 'enter'). If it is 'clicked', it
  * generates an <code>ActionEvent</code>, that is delegated to registered listeners.
  */
 public class Button extends Widget {
-    private static InputChar __actionChar = new InputChar('\n');
-    private ActionListenerManager _listenerManager = new ActionListenerManager();
+
+    private static final InputChar __actionChar = new InputChar('\n');
+    private final ActionListenerManager _listenerManager = new ActionListenerManager();
+
     private InputChar _shortCut = null;
     private String _label = null;
 
@@ -35,7 +37,7 @@ public class Button extends Widget {
     /**
      * Sets button's label
      *
-     * @param  aLabel  buttton's label
+     * @param  aLabel  button's label
      */ 
     public void setLabel(String aLabel) {
         _label = aLabel;
@@ -81,7 +83,7 @@ public class Button extends Widget {
 
     /**
      * Sets button's shortcut char's colors. If the button has a shortcut char
-     * and this char is contained by the label, than the char within the label will be
+     * and this char is contained by the label, then the char within the label will be
      * painted in different colors, set by this method
      *
      * @param  aColor  button's shortcut char's colors

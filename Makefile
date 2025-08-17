@@ -30,7 +30,7 @@ jar: java
 	cd classes/ && $(JAR) -cvf ../lib/jcurses.jar *
 
 clean:
-	rm -rf ./classes/* ./lib/*
+	rm -rf ./classes/* ./lib/* && find ./doc/* | grep -vi "overview.html" | xargs rm -rf
 
 test:
 	$(JAVA) -classpath ./lib/jcurses.jar -Djcurses.protocol.filename=jcurses.log jcurses.tests.Test

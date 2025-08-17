@@ -4,20 +4,20 @@ package jcurses.widgets;
 import jcurses.util.Rectangle;
 
 /***************************************************************************************************************************************************************
- * This class is a layout manager that works like as the <code>DefaultLayoutManager</code> with an difference: the painting rectangle is shared in many grid
- * cells and the constraints are stated not in real coodinates on the painting rectangle, but in 'grid-coordinates'
+ * This class is a layout manager that works like as the <code>DefaultLayoutManager</code> with a difference: the painting rectangle is shared in many grid
+ * cells and the constraints are stated not in real coordinates on the painting rectangle, but in 'grid-coordinates'
  */
-
 public class GridLayoutManager implements LayoutManager, WidgetsConstants
 {
 
-  private DefaultLayoutManager _defLayout = new DefaultLayoutManager();
+  private final DefaultLayoutManager _defLayout = new DefaultLayoutManager();
+
   private WidgetContainer      _father    = null;
 
-  private int                  _width     = 0;
-  private int                  _height    = 0;
+  private final int _width;
+  private final int _height;
 
-  private Grid                 _grid      = null;
+  private Grid _grid = null;
 
   public void bindToContainer(WidgetContainer container)
   {
@@ -60,13 +60,13 @@ public class GridLayoutManager implements LayoutManager, WidgetsConstants
   }
 
   /**
-   * Adds a widget to the boundeb container
+   * Adds a widget to the bounded container
    * 
    * @param widget widget to be added
    * @param x the x coordinate of the top left corner of the rectangle, within that the widget is placed
    * @param y the y coordinate of the top left corner of the rectangle, within that the widget is placed
    * @param width the width of the rectangle, within that the widget is placed
-   * @param height the hight of the rectangle, within that the widget is placed
+   * @param height the height of the rectangle, within that the widget is placed
    * @param verticalConstraint vertical alignment constraint. Following values a possible: <code>WidgetConstraints.ALIGNMENT_CENTER</code>,
    *          <code>WidgetConstraints.ALIGNMENT_TOP</code>,<code>WidgetConstraints.ALIGNMENT_BOTTOM</code>
    * @param horizontalConstraint vertical alignment constraint, Following values are possible: *<code>WidgetConstraints.ALIGNMENT_CENTER</code>,
@@ -93,12 +93,12 @@ public class GridLayoutManager implements LayoutManager, WidgetsConstants
 class GridLayoutConstraint
 {
 
-  int x                    = 0;
-  int y                    = 0;
-  int width                = 0;
-  int height               = 0;
-  int horizontalConstraint = 0;
-  int verticalConstraint   = 0;
+  int x;
+  int y;
+  int width;
+  int height;
+  int horizontalConstraint;
+  int verticalConstraint;
 
   GridLayoutConstraint(int aX, int aY, int aWidth, int aHeight, int aHorizontalConstraint, int aVerticalConstraint)
   {

@@ -2,7 +2,7 @@
 package jcurses.system;
 
 /**
- * The instances of this class represent characters or key codes, that are input by an user. An instance of the class contains einther a ascii character or one
+ * The instances of this class represent characters or key codes, that are input by a user. An instance of the class contains either a ascii character or one
  * of in the class declared constants for function keys and control keys.
  */
 public class InputChar
@@ -34,9 +34,10 @@ public class InputChar
   public static final int KEY_ESC       = 27;                             /* Escape character */
   public static final int KEY_TAB       = '\t';                           /* Tab character */
 
-  private static byte[]   __bytes       = new byte[1];
-  private String          _string       = null;
-  private int             _code         = - 1;
+  private static final byte[] __bytes = new byte[1];
+
+  private String _string = null;
+  private final int _code;
 
   /**
    * The constructor
@@ -132,7 +133,7 @@ public class InputChar
   private static synchronized String convertByteToString(int code)
   {
     __bytes[0] = (byte)code;
-    String result = null;
+    String result;
     String encoding = Toolkit.getEncoding();
 
     if ( encoding == null )

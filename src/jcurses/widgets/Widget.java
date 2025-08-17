@@ -1,10 +1,4 @@
-/**
- * Dies ist die Root-Klasse f?r alle Widgets.
- */
-
 package jcurses.widgets;
-
-import java.util.Vector;
 
 import jcurses.system.CharColor;
 import jcurses.system.InputChar;
@@ -12,25 +6,29 @@ import jcurses.themes.Theme;
 import jcurses.themes.WindowThemeOverride;
 import jcurses.util.Rectangle;
 
+import java.util.Vector;
+
 /**
- * This class is superclass for all jcurses widgets. For implementing a ne widget you must derive it.
- * 
- * An jcurses widget is already used within a window. Its task ist to help it's <code>WidgetContainer</code> to layout itself, giving needed informations, to
+ * This class is superclass for all jcurses widgets. To implement a widget you must derive it.
+ * <br>
+ * A jcurses widget is already used within a window. Its task ist to help it's <code>WidgetContainer</code> to layout itself, giving needed information, to
  * paint itself and to handle input. Handling input is needed only, if the widget has is an input widget ( examples are text input widget, list widget) and has
- * currently focus, that is is selected by user to handle input. This selectig ocurrs by typing a special key (currenty 'tab') to switch between input widgets.
- * 
- * All widgets are ordered in a hierarchy. An widget is already has a container, if it isn't the root pane of a window.
+ * currently focused, that is selected by user to handle input. This selecting occurs by typing a special key (currently 'tab') to switch between input widgets.
+ * <br>
+ * All widgets are ordered in a hierarchy. A widget is already has a container, if it isn't the root pane of a window.
  */
 public abstract class Widget
 {
-  WidgetContainer   _parent  = null;
-  Window            _window  = null;
-  private Theme     _theme   = new WindowThemeOverride();
-  private Rectangle _rect    = new Rectangle();
-  private boolean   _focus   = false;
+
+  private final Theme     _theme   = new WindowThemeOverride();
+  private final Rectangle _rect    = new Rectangle();
+
+  private WidgetContainer   _parent  = null;
+  private Window            _window  = null;
+  private boolean           _focus   = false;
 
   /**
-   * Methoden, die Sichtbarkeit regeln. Ein widget ist dann sichtbar wenn er UND sein Parent sichtbar sind
+   * Methods that control visibility. A widget is visible if it AND its parent are visible.
    */
   private boolean   _visible = true;
 
@@ -165,7 +163,7 @@ public abstract class Widget
 
   /**
    * The method returns true, if the visibility flag of the widget is true. This doesn't mean that the widget ist currently visible, because the parent whole
-   * window can be unvisible, use the method <code>isVisible</code> to query the visisbility
+   * window can be invisible, use the method <code>isVisible</code> to query the visibility
    * 
    * @return true, if the visibility flag is set, false otherwise
    */
@@ -186,8 +184,7 @@ public abstract class Widget
       return false;
 
     Window w = getWindow();
-    boolean result = ( ( _visible ) && ( w != null ) && ( w.isVisible() ) );
-    return result;
+      return ( ( _visible ) && ( w != null ) && ( w.isVisible() ) );
   }
 
   /**
@@ -217,7 +214,7 @@ public abstract class Widget
   }
 
   /**
-   * @return true, if the widget has currenty focus,that is handles input, in othe case false
+   * @return true, if the widget currently has focus,that is handles input, else false
    */
   public boolean hasFocus()
   {
@@ -245,24 +242,11 @@ public abstract class Widget
     int mY = getY();
     if ( getParent() != null )
       mY += getParent().getAbsoluteY();
-    //mY += getParent().getClientArea().getY();
     return mY;
-    /*
-     * 
-     * int result = _rect.getY();
-     * 
-     * for (WidgetContainer mWidget = getParent(); mWidget != null; mWidget = getParent()) result += mWidget.getChildsRectangle().getX();
-     * 
-     * result = _rect.getY() + getParent().getAbsoluteY();
-     * 
-     * if ( getParent().getChildsRectangle() != null ) result = result + getParent().getChildsRectangle().getY();
-     * 
-     * return result;
-     */
   }
 
   /**
-   * Sets widget's container. Is called by framework, schouldn't be called writing applications
+   * Sets widget's container. Is called by framework, shouldn't be called writing applications
    * 
    * @param parent new container
    */
@@ -280,7 +264,7 @@ public abstract class Widget
   }
 
   /**
-   * This method gives the widget container the infomation about the preferred size of this widget. Must be implemented by derived classes.
+   * This method gives the widget container the information about the preferred size of this widget. Must be implemented by derived classes.
    */
   protected abstract Rectangle getPreferredSize();
 
@@ -311,7 +295,7 @@ public abstract class Widget
   }
 
   /**
-   * /** Sets widget's window. Is called by framework, schouldn't be called writing applications
+   * /** Sets widget's window. Is called by framework, shouldn't be called writing applications
    * 
    * @param window widget's window
    */
@@ -332,7 +316,7 @@ public abstract class Widget
   }
 
   /**
-   * Sets the x coordinate within the container. Is called by framework, schouldn't be called writing applications
+   * Sets the x coordinate within the container. Is called by framework, shouldn't be called writing applications
    * 
    * @param aX x coordinate within the container
    */
@@ -342,7 +326,7 @@ public abstract class Widget
   }
 
   /**
-   * Sets the y coordinate within the container. Is called by framework, schouldn't be called writing applications
+   * Sets the y coordinate within the container. Is called by framework, shouldn't be called writing applications
    * 
    * @param aY y coordinate within the container
    */
@@ -367,7 +351,7 @@ public abstract class Widget
   }
 
   /**
-   * @return default colors for this widget. What this mentiones in a concret case, is dependent on the derived class.
+   * @return default colors for this widget. What this mentions in a concrete case, is dependent on the derived class.
    */
   public CharColor getDefaultColors()
   {
@@ -385,8 +369,8 @@ public abstract class Widget
   }
 
   /**
-   * This method returns a list of short cut chars, that the widget want to handle. If a char from the list is typed by user, it will be handled always my this
-   * widget not bei the widget currenty having focus, except the having focus widget handles ALL chars and tells this throuth the method
+   * This method returns a list of shortcut chars, that the widget want to handle. If a char from the list is typed by user, it will always be handled my this
+   * widget not bei the widget currently having focus, except the having focus widget handles ALL chars and tells this through the method
    * <code>handleAllPrintableChars</code>. To enable shortcuts for a new widget, you must override this method.
    */
   protected Vector getShortCutsList()
@@ -395,7 +379,7 @@ public abstract class Widget
   }
 
   /**
-   * The method is called by <code>setFocus</code> to tell the widget that it has recieved focus. This method should be overridden by subclassesto react
+   * The method is called by <code>setFocus</code> to tell the widget that it has received focus. This method should be overridden by subclasses to react
    * getting focus, for example to repaint widget getting focus.
    */
   protected void focus()
@@ -404,7 +388,7 @@ public abstract class Widget
   }
 
   /**
-   * The method is called by framework to let the widget handle an input char. Schould be overrided be derived classes, if these can handle input.
+   * The method is called by framework to let the widget handle an input char. Should be overridden be derived classes, if these can handle input.
    * 
    * @return true, if the widget has handled the char, false in other case
    */
@@ -438,7 +422,7 @@ public abstract class Widget
    * The method is called by <code>setFocus</code> to tell widget that it has lost focus. This method should be overridden by subclasses to react losing
    * focus, for example to repaint widget losing focus.
    */
-  protected void unfocus()
+  protected void unFocus()
   {
   // this is for subclasses to implement, but need to be concrete here
   }
@@ -457,7 +441,7 @@ public abstract class Widget
     if ( aFocus )
       focus();
     else
-      unfocus();
+      unFocus();
   }
 
   protected void setHeight(int aHeight)

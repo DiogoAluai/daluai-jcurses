@@ -19,54 +19,45 @@ import java.util.ArrayList;
  */
 public class TextComponent extends Widget
 {
-  //private static CharColor __textComponentDefaultColors = new CharColor(CharColor.MAGENTA, CharColor.BLACK);
-  //private static CharColor __focusedTextComponentDefaultColors = new CharColor(CharColor.BLUE, CharColor.WHITE, CharColor.REVERSE);
-  //private static CharColor __cursorDefaultColors = new CharColor(CharColor.BLACK, CharColor.WHITE);
-  //private CharColor _cursorColors = getCursorDefaultColors();
-  //private CharColor _focusedTextComponentColors = getFocusedTextComponentDefaultColors();
-  ArrayList                           _lineLengths     = new ArrayList();
-  ArrayList                           _lines           = new ArrayList();
-  StringBuffer                        _text            = new StringBuffer("");
+  private final ValueChangedListenerManager _listenerManager = new ValueChangedListenerManager();
 
-  //Listener
-  private ValueChangedListenerManager _listenerManager = new ValueChangedListenerManager();
+  private final ArrayList                           _lineLengths     = new ArrayList();
+  private final ArrayList                           _lines           = new ArrayList();
 
-  /*
-   * private static String escapeString(String text) { StringBuffer buf = new StringBuffer(); for (int i=0; i <text.length(); i++) { char c = text.charAt(i); if
-   * (c == '\n') { buf.append("\\n"); } else if (c == '\r') { buf.append("\\r"); } else if (c == '\t') { buf.append("\\t"); } else { buf.append(c); } }
-   * 
-   * return buf.toString(); }
-   */
+  private StringBuffer                        _text            = new StringBuffer();
+
   private boolean                     editable         = true;
   private int                         _cursPosX        = 0;
   private int                         _cursPosY        = 0;
   private int                         _firstChar       = 0;
   private int                         _firstLine       = 0;
   private int                         _preferredHeight = 0;
-  private int                         _preferrdWidth   = 0;
+  private int                         _preferredWidth = 0;
 
   /**
-   * A constructor accepting both the X and Y coordinates of the component and the String containig the inital contents of the component.
+   * A constructor accepting both the X and Y coordinates of the component and the String containing the initial
+   * contents of the component.
    * 
-   * @param width the preferred width of the component. If -1 is stated, there is no preferred width and the component is layouted dependend on the container
-   *          and the text
-   * @param height the preferred height of the component. If -1 is stated, there is no preferred width and the component is layouted dependend on the container.
+   * @param width the preferred width of the component. If -1 is stated, there is no preferred width and the component's
+   *              layout then depends on the container and the text
+   * @param height the preferred height of the component. If -1 is stated, there is no preferred width and the component's
+   *              layout then depends on the container and the text.
    * @param text the contents of the component
    */
   public TextComponent(int width, int height, String text)
   {
-    _preferrdWidth = width;
+    _preferredWidth = width;
     _preferredHeight = height;
     setText(text);
   }
 
   /**
    * The constructor
-   * 
-   * @param width the preferred width of the component. If -1 is stated, there is no preferred width and the component is layouted dependend on the container
-   *          and the text
-   * @param height the preferred height of the component. If -1 is stated, there is no preferred width and the component is layouted dependend on the container
-   *          and the text.
+   *
+   * @param width the preferred width of the component. If -1 is stated, there is no preferred width and the component's
+   *              layout then depends on the container and the text
+   * @param height the preferred height of the component. If -1 is stated, there is no preferred width and the component's
+   *              layout then depends on the container and the text.
    */
   public TextComponent(int width, int height)
   {
@@ -107,7 +98,7 @@ public class TextComponent extends Widget
   }
 
   /**
-   * The method sets the cursor position to given koordinates ( within the text, not widget )
+   * The method sets the cursor position to given coordinates ( within the text, not widget )
    * 
    * @param x new x cursor coordinate within the text
    * @param y new y cursor coordinate within the text
@@ -162,7 +153,7 @@ public class TextComponent extends Widget
   }
 
   /**
-   * Sets the conteined text
+   * Sets the contained text
    * 
    * @param text text to set
    */
@@ -226,7 +217,7 @@ public class TextComponent extends Widget
    */
   protected Rectangle getPreferredSize()
   {
-    return new Rectangle(_preferrdWidth, _preferredHeight);
+    return new Rectangle(_preferredWidth, _preferredHeight);
   }
 
   protected int getTextHeight()
@@ -235,7 +226,7 @@ public class TextComponent extends Widget
   }
 
   /**
-   * The method returns the rectangle, within that the text is painted. Is overrided by derived classes for example to implement a border.
+   * The method returns the rectangle, within that the text is painted. Is overridden by derived classes for example to implement a border.
    * 
    * @return DOCUMENT ME!
    */
@@ -251,11 +242,10 @@ public class TextComponent extends Widget
   {
     int result = 0;
 
-    for ( int i = 0; i < _lineLengths.size(); i++ )
-    {
-      int value = ( (Integer)_lineLengths.get(i) ).intValue();
+    for (Object lineLength : _lineLengths) {
+      int value = (Integer) lineLength;
 
-      if ( value > result )
+      if (value > result)
         result = value;
     }
 
@@ -289,7 +279,7 @@ public class TextComponent extends Widget
    */
   protected int getPreferredWidth()
   {
-    return _preferrdWidth;
+    return _preferredWidth;
   }
 
   protected void doPaint()
@@ -307,7 +297,7 @@ public class TextComponent extends Widget
   }
 
   /**
-   * This method draws text-dependent additional things such as scrollbars. As default it makes nothing, can be overriden in inherited classes ( for example
+   * This method draws text-dependent additional things such as scrollbars. As default, it makes nothing, can be overridden in inherited classes ( for example
    * text area)
    */
   protected void drawAdditionalThings()
@@ -406,7 +396,7 @@ public class TextComponent extends Widget
           if ( y < 0 )
             y = 0;
 
-          int x = ( (Integer)_lineLengths.get(y) ).intValue();
+          int x = (Integer) _lineLengths.get(y);
           setCursorLocation(x, y);
           redrawAfterTextChange(bCursorPosX, bCursorPosY, bFirstChar, bFirstLine);
         }
@@ -442,7 +432,7 @@ public class TextComponent extends Widget
   }
 
   /**
-   * This method refreshes text-dependent additional after a text change such as scrollbars. As default it makes nothing, can be overriden in inherited classes (
+   * This method refreshes text-dependent additional after a text change such as scrollbars. As default, it makes nothing, can be overridden in inherited classes (
    * for example text area)
    */
   protected void refreshAdditionalThings()
@@ -451,7 +441,7 @@ public class TextComponent extends Widget
   }
 
   /**
-   * This method replaces a line of text to printing througth another text line. This can be overrided in derived classes for example for painting all chars as
+   * This method replaces a line of text to printing through another text line. This can be overridden in derived classes for example for painting all chars as
    * capitals, or for password input. Here the same line is returned.
    * 
    * @param line a text line to replace, contains no line breaks
@@ -494,8 +484,6 @@ public class TextComponent extends Widget
 
       if ( _cursPosX < line.length() )
         result = line.charAt(_cursPosX);
-      else
-        result = 0;
     }
 
     return result;
@@ -520,16 +508,13 @@ public class TextComponent extends Widget
     else
       _cursPosY = y;
 
-    int length = ( (Integer)_lineLengths.get(_cursPosY) ).intValue();
+    int length = (Integer) _lineLengths.get(_cursPosY);
 
     if ( x < 0 )
       _cursPosX = 0;
-    else if ( x >= length )
-      _cursPosX = length;
-    else
-      _cursPosX = x;
+    else _cursPosX = Math.min(x, length);
 
-    _cursPosY = ( _cursPosY < 0 ) ? 0 : _cursPosY;
+    _cursPosY = Math.max(_cursPosY, 0);
 
     // first Position
     if ( _firstChar > _cursPosX )
@@ -550,9 +535,6 @@ public class TextComponent extends Widget
 
   private int getFirstCharNumber()
   {
-    /*
-     * int result = _cursPosX - getTextRectangle().getWidth()+1; result = (result < 0)?0:result;
-     */
     return _firstChar;
   }
 
@@ -569,8 +551,8 @@ public class TextComponent extends Widget
     if ( index > _lines.size() )
       return null;
 
-    int pos = ( (Integer)_lines.get(index) ).intValue();
-    int length = ( (Integer)_lineLengths.get(index) ).intValue();
+    int pos = (Integer) _lines.get(index);
+    int length = (Integer) _lineLengths.get(index);
 
     return _text.substring(pos, pos + length);
   }
@@ -578,7 +560,7 @@ public class TextComponent extends Widget
   private Rectangle getLineRectangle(int firstLine)
   {
     Rectangle rect = getTextRectangle();
-    int y = ( ( firstLine - _firstLine ) >= 0 ) ? ( firstLine - _firstLine ) : 0;
+    int y = Math.max((firstLine - _firstLine), 0);
     rect.setLocation(rect.getX(), rect.getY() + y);
     rect.setHeight(1);
     return rect;
@@ -608,7 +590,7 @@ public class TextComponent extends Widget
   private Rectangle getTextRectangle(int firstLine)
   {
     Rectangle rect = getTextRectangle();
-    int y = ( ( firstLine - _firstLine ) >= 0 ) ? ( firstLine - _firstLine ) : 0;
+    int y = Math.max((firstLine - _firstLine), 0);
     rect.setLocation(rect.getX(), rect.getY() + y);
     rect.setHeight(rect.getHeight() - y);
     return rect;
@@ -621,9 +603,6 @@ public class TextComponent extends Widget
 
   private void changeColors()
   {
-    //Rectangle rect = getTextRectangle();
-    //CharColor colors = hasFocus() ? getSelectedColors() : getColors();
-    //Toolkit.changeColors(rect, colors);
     doRepaint();
   }
 
@@ -632,7 +611,7 @@ public class TextComponent extends Widget
     if ( ! isEditable() )
       return;
 
-    int pos = ( (Integer)_lines.get(_cursPosY) ).intValue() + _cursPosX;
+    int pos = (Integer) _lines.get(_cursPosY) + _cursPosX;
 
     if ( pos > 0 )
       _text.deleteCharAt(pos - 1);
@@ -671,13 +650,13 @@ public class TextComponent extends Widget
     CharColor colors = hasFocus() ? getSelectedColors() : getColors();
     int firstLine = getFirstLineNumber();
     int firstChar = getFirstCharNumber();
-    int pos = ( (Integer)_lines.get(index) ).intValue();
-    int length = ( (Integer)_lineLengths.get(index) ).intValue();
+    int pos = (Integer) _lines.get(index);
+    int length = (Integer) _lineLengths.get(index);
 
     if ( ( firstChar < length ) && ( ( index - firstLine ) < rect.getHeight() ) )
     {
       int length2 = length - firstChar;
-      int length3 = ( length2 > rect.getWidth() ) ? rect.getWidth() : length2;
+      int length3 = Math.min(length2, rect.getWidth());
       Toolkit.printString(replaceTextLineForPrinting(_text.substring(pos + firstChar, pos + firstChar + length3)), rect.getX(), ( rect.getY() + index )
           - firstLine, colors);
     }
@@ -686,7 +665,7 @@ public class TextComponent extends Widget
   private void drawText(int index)
   {
     int firstLine = getFirstLineNumber();
-    int begin = ( firstLine > index ) ? firstLine : index;
+    int begin = Math.max(firstLine, index);
 
     for ( int i = begin; i < _lines.size(); i++ )
       drawLine(i);
@@ -702,7 +681,7 @@ public class TextComponent extends Widget
     if ( ! isEditable() )
       return;
 
-    int pos = ( (Integer)_lines.get(_cursPosY) ).intValue() + _cursPosX;
+    int pos = (Integer) _lines.get(_cursPosY) + _cursPosX;
     _text.insert(pos, c);
     updateText();
   }
@@ -761,7 +740,6 @@ public class TextComponent extends Widget
 
   private void updateText(boolean dispatchEvent)
   {
-    //neu darstellen
     _lines.clear();
     _lineLengths.clear();
 
@@ -771,32 +749,31 @@ public class TextComponent extends Widget
 
     while ( text.indexOf("\n", pos) != - 1 )
     {
-      _lines.add(new Integer(pos));
-      _lineLengths.add(new Integer(text.indexOf("\n", pos) - pos));
+      _lines.add(pos);
+      _lineLengths.add(text.indexOf("\n", pos) - pos);
       pos = text.indexOf("\n", pos) + 1;
     }
 
     if ( pos < text.length() )
     {
-      _lines.add(new Integer(pos));
-      _lineLengths.add(new Integer(_text.length() - pos));
+      _lines.add(pos);
+      _lineLengths.add(_text.length() - pos);
     }
 
-    if ( _lines.size() == 0 )
+    if (_lines.isEmpty())
     {
-      _lines.add(new Integer(0));
-      _lineLengths.add(new Integer(0));
+      _lines.add(0);
+      _lineLengths.add(0);
     }
     else
     {
       if ( text.endsWith("\n") )
       {
-        _lines.add(new Integer(text.length()));
-        _lineLengths.add(new Integer(0));
+        _lines.add(text.length());
+        _lineLengths.add(0);
       }
     }
 
-    //event abschicken
     if ( dispatchEvent )
       _listenerManager.handleEvent(new ValueChangedEvent(this));
   }
