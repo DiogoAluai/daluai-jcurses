@@ -1,12 +1,9 @@
 /* -*- tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
 package jcurses.widgets;
 
-import jcurses.system.Toolkit;
-
 import jcurses.system.CharColor;
 import jcurses.system.InputChar;
-import jcurses.util.Profiler;
-import jcurses.util.Protocol;
+import jcurses.system.Toolkit;
 import jcurses.util.Rectangle;
 
 import java.util.Vector;

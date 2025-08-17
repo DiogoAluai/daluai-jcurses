@@ -6,21 +6,16 @@
 package jcurses.widgets;
 
 
-import java.util.Vector;
-
-import jcurses.event.ItemListenerManager;
-import jcurses.event.ItemListener;
 import jcurses.event.ItemEvent;
-
+import jcurses.event.ItemListener;
+import jcurses.event.ItemListenerManager;
 import jcurses.system.CharColor;
 import jcurses.system.InputChar;
 import jcurses.system.Toolkit;
-
-import jcurses.util.Protocol;
+import jcurses.util.Paging;
 import jcurses.util.Rectangle;
 
-import jcurses.util.ScrollbarUtils;
-import jcurses.util.Paging;
+import java.util.Vector;
 
 
 

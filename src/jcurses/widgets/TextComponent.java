@@ -1,17 +1,16 @@
 package jcurses.widgets;
 
 
-import java.util.ArrayList;
-
+import jcurses.event.ValueChangedEvent;
 import jcurses.event.ValueChangedListener;
 import jcurses.event.ValueChangedListenerManager;
-import jcurses.event.ValueChangedEvent;
-import jcurses.system.Toolkit;
 import jcurses.system.CharColor;
 import jcurses.system.InputChar;
-import jcurses.util.Protocol;
-import jcurses.util.Rectangle;
+import jcurses.system.Toolkit;
 import jcurses.util.Paging;
+import jcurses.util.Rectangle;
+
+import java.util.ArrayList;
 
 /**
 *  The class is the superclass for text editing widgets

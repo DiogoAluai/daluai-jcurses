@@ -1,9 +1,9 @@
 package jcurses.themes;
 
+import jcurses.system.CharColor;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import jcurses.system.CharColor;
 
 /**
  * @author alewis

@@ -7,7 +7,6 @@
 package jcurses.themes;
 
 import jcurses.system.CharColor;
-import jcurses.widgets.Window;
 
 /**
  * @author alewis

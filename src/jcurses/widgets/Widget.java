@@ -5,11 +5,8 @@
 
 package jcurses.widgets;
 
-import java.util.List;
-
 import jcurses.system.CharColor;
 import jcurses.system.InputChar;
-import jcurses.util.Protocol;
 import jcurses.util.Rectangle;
 
 import java.util.Vector;

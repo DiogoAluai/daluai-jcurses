@@ -1,7 +1,7 @@
 package jcurses.widgets;
 
-import jcurses.util.Rectangle;
 import jcurses.system.CharColor;
+import jcurses.util.Rectangle;
 
 
 /**

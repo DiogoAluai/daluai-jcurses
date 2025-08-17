@@ -7,7 +7,6 @@ import jcurses.event.WindowListenerManager;
 import jcurses.system.CharColor;
 import jcurses.system.InputChar;
 import jcurses.system.Toolkit;
-import jcurses.util.Protocol;
 import jcurses.util.Rectangle;
 
 import java.util.Collections;

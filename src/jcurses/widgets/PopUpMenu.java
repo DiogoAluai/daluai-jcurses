@@ -1,9 +1,7 @@
 package jcurses.widgets;
 
-import jcurses.util.Protocol;
 import jcurses.event.ItemEvent;
 import jcurses.event.ItemListener;
-import jcurses.system.Toolkit;
 
 /**
 *  This class implements a popup menu window. Such windows can be used 

@@ -6,14 +6,10 @@
 
 package jcurses.widgets;
 
-import jcurses.system.InputChar;
 import jcurses.system.Toolkit;
-import jcurses.util.Protocol;
 import jcurses.util.Rectangle;
 
-
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Vector;
 
 /**

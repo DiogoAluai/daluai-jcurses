@@ -1,14 +1,12 @@
 package jcurses.widgets;
 
-import jcurses.event.ActionListener;
 import jcurses.event.ActionEvent;
-import jcurses.event.ItemListener;
+import jcurses.event.ActionListener;
 import jcurses.event.ItemEvent;
-
+import jcurses.event.ItemListener;
 import jcurses.system.InputChar;
 import jcurses.system.Toolkit;
 import jcurses.util.Message;
-import jcurses.util.Protocol;
 
 import java.io.File;
 import java.io.FileFilter;

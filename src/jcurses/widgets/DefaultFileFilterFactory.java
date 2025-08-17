@@ -3,8 +3,6 @@ package jcurses.widgets;
 import java.io.File;
 import java.io.FileFilter;
 
-import jcurses.util.Protocol;
-
 
 public class DefaultFileFilterFactory implements JCursesFileFilterFactory {
 	
