@@ -1,5 +1,4 @@
 # Generated automatically from Makefile.in by configure.
-CURSES=-lncurses
 USERNAME=$(shell whoami)
 JAVAHOME=/home/$(USERNAME)/.sdkman/candidates/java/8.0.462-amzn
 JAVAC=$(JAVAHOME)/bin/javac
@@ -9,6 +8,7 @@ JAVA=$(JAVAHOME)/bin/java
 JAVADOC=$(JAVAHOME)/bin/javadoc
 GCC=gcc
 GCCFLAGS=-Wall -shared -I$(JAVAHOME)/include -I$(JAVAHOME)/include/linux -fPIC
+CURSES=-lncurses
 CLASSPATH=./classes
 
 default: jar native docs
@@ -17,7 +17,7 @@ docs: ;$(JAVADOC) -encoding ISO-8859-1 -Xdoclint:none -classpath $(CLASSPATH) -s
 native: java include
 include: java;$(JAVAH) -encoding ISO-8859-1 -classpath ./src -d ./src/native/include jcurses.system.Toolkit
 clean: ;rm -rf ./classes/jcurses ./lib/libjcurses.so ./lib/jcurses.jar ./src/native/include/*.h && find ./doc/* | grep -vi "overview.html" | xargs rm -rf
-native:java include;$(GCC) $(GCCFLAGS) -o lib/libjcurses.so $(CURSES) src/native/Toolkit.c -lncurses
+native:java include;$(GCC) $(GCCFLAGS) -o lib/libjcurses.so src/native/Toolkit.c $(CURSES)
 jar: java;cd classes/ && $(JAR) -cvf ../lib/jcurses.jar *
 test: ;$(JAVA) -classpath ./lib/jcurses.jar -Djcurses.protocol.filename=jcurses.log jcurses.tests.Test
 
