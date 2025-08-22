@@ -3,15 +3,18 @@ JCurses - a java console windowing toolkit for Windows and Linux
 
 ---
 
-Aug 2025 - Installation
+(Diogo Aluai) Aug 2025 - Installation
 --------
-The Makefile relies on `javah`, which one can get with ubuntu with:
+A `final.sh` script is provided to fully build the project (maven install, make, and prompt to install libjcurses.so).
+
+However, this final script requires [sdkman](https://sdkman.io/), and java 8.0.462-amzn:
 ```bash
-sudo apt install openjdk-8-jdk-headless
+# install sdkman following their website's instructions
+sdk java install 8.0.462-amzn
+sdk java install 17.0.13-amzn && sdk java use 17.0.13-amzn # example of currently using different java version
+./final.sh
 ```
-Adaption of java command paths in Makefile is required.
-A `final.sh` file is provided to fully build the project, requiring [sdkman](https://sdkman.io/) to temporarily set java 8
-for building purposes.
+
 
 
 ---

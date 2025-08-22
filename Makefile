@@ -1,6 +1,7 @@
 # Generated automatically from Makefile.in by configure.
 CURSES=-lncurses
-JAVAHOME=/home/daluai/.sdkman/candidates/java/current
+USERNAME=$(shell whoami)
+JAVAHOME=/home/$(USERNAME)/.sdkman/candidates/java/8.0.462-amzn
 JAVAC=$(JAVAHOME)/bin/javac
 JAR=$(JAVAHOME)/bin/jar
 JAVAH=$(JAVAHOME)/bin/javah
