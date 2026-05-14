@@ -11,7 +11,6 @@ However, this final script requires [sdkman](https://sdkman.io/), and java 8.0.4
 ```bash
 # install sdkman following their website's instructions
 sdk java install 8.0.462-amzn
-sdk java install 17.0.13-amzn && sdk java use 17.0.13-amzn # example of currently using different java version
 ./final.sh
 ```
 
